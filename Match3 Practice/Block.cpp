@@ -47,4 +47,6 @@ void Block::Update(float dt)
 
 void Block::Draw(sf::RenderWindow& window)
 {
+	if(type != BlockTypes::None)
+		window.draw(block);
 }

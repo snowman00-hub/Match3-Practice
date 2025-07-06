@@ -25,7 +25,7 @@ void SceneGame::Init()
 		0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0
 	};
-	test = (SpriteGo*)AddGameObject(new SpriteGo("graphics/Blocks.png"));
+	//test = (SpriteGo*)AddGameObject(new SpriteGo("graphics/Blocks.png"));
 
 	Scene::Init();
 

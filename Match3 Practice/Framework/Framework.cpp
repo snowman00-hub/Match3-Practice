@@ -17,7 +17,7 @@ void Framework::Init(int w, int h, const std::string& t)
     texIds.push_back("graphics/boxObstacle.png");
     texIds.push_back("graphics/bg_sky.png");
     texIds.push_back("graphics/bg_day.jpg");
-    texIds.push_back("graphics/Blocks.png");
+    texIds.push_back("graphics/blocks.png");
 
     fontIds.push_back("fonts/Maplestory Light.ttf");
 

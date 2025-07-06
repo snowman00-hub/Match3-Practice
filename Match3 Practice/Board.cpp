@@ -21,6 +21,7 @@ void Board::SetBoard(int* arr)
 					blocks[y][x]->SetActive(false);
 			}
 			blocks[y][x]->SetBoardPos({ x,y });
+			blocks[y][x]->SetPosition({ 90.f + (float)Block::SIZE * x, (float)Block::SIZE * y });
 		}
 	}
 }
@@ -59,23 +60,51 @@ void Board::Init()
 		for (int x = 0; x < cols; x++)
 		{
 			blocks[y][x] = new Block();
+			blocks[y][x]->Init();
 		}
 	}
 }
 
 void Board::Release()
 {
+	for (int y = 0; y < rows; y++)
+	{
+		for (int x = 0; x < cols; x++)
+		{
+			blocks[y][x]->Release();
+		}
+	}
 }
 
 void Board::Reset()
 {
+	for (int y = 0; y < rows; y++)
+	{
+		for (int x = 0; x < cols; x++)
+		{
+			blocks[y][x]->Reset();
+		}
+	}
 }
 
 void Board::Update(float dt)
 {
+	for (int y = 0; y < rows; y++)
+	{
+		for (int x = 0; x < cols; x++)
+		{
+			blocks[y][x]->Update(dt);
+		}
+	}
 }
 
 void Board::Draw(sf::RenderWindow& window)
 {
-
+	for (int y = 0; y < rows; y++)
+	{
+		for (int x = 0; x < cols; x++)
+		{
+			blocks[y][x]->Draw(window);
+		}
+	}
 }

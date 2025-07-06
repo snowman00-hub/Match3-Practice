@@ -10,7 +10,7 @@ public:
 protected:
 	Block* blocks[rows][cols];
 
-	std::vector<sf::Vector2i> removeIndexs;
+	std::vector<sf::Vector2i> removePos;
 
 	GameState state = GameState::Idle;
 
