@@ -2,10 +2,13 @@
 
 // STL
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <list>
+#include <queue>
 #include <unordered_map>
 #include <algorithm>
+#include <functional>
 
 // SFML
 #include <SFML/Graphics.hpp>

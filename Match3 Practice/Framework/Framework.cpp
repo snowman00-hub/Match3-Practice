@@ -30,7 +30,7 @@ void Framework::Init(int w, int h, const std::string& t)
 
     Utils::Init();
 	InputMgr::Init();
-    SoundMgr::Init();
+    SOUND_MGR.Init();
 	SCENE_MGR.Init();
 }
 
@@ -56,6 +56,7 @@ void Framework::Do()
         InputMgr::Update(deltaTime);
 
         // Update
+        SOUND_MGR.Update(deltaTime);
         SCENE_MGR.Update(deltaTime);
 
         // Draw
@@ -67,6 +68,7 @@ void Framework::Do()
 
 void Framework::Release()
 {
+    SOUND_MGR.Release();
 	SCENE_MGR.Release();
 
 	SOUNDBUFFER_MGR.Unload(soundIds);
