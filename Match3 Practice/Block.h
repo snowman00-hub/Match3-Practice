@@ -6,6 +6,7 @@ class Block : public GameObject
 public:
 	static const int SIZE = 60;
 	static const float moveDuration;
+	static const float swapDuration;
 
 protected:
 	sf::Sprite block;
@@ -13,12 +14,14 @@ protected:
 	sf::Vector2i boardPos;
 	sf::Vector2f moveDir = { 0.f,0.f };
 	float moveSpeed = SIZE / moveDuration;
+	float swapSpeed = SIZE / swapDuration;
 
 	BlockTypes type = BlockTypes::None;
 
 	std::string blockTexId = "graphics/blocks.png";
 
 	bool isMoving = false;
+	bool isSwapping = false;
 
 public:
 	Block() = default;
@@ -28,6 +31,7 @@ public:
 	void SetBoardPos(sf::Vector2i pos) { boardPos = pos; }
 	void SetMoveDir(sf::Vector2f dir) { moveDir = dir; }
 	void SetIsMoving(bool b) { isMoving = b; }
+	void SetIsSwapping(bool b) { isSwapping = b; }
 
 	BlockTypes GetBlockType() const { return type; }
 	sf::Vector2i GetBoardPos() const { return boardPos; }

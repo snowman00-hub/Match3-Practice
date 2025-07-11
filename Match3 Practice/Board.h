@@ -26,6 +26,10 @@ protected:
 	const float boardLeft = 90.f;
 	const float boardTop = 150.f;
 
+	bool isSwapping = false;
+
+	float aniTimer = 0.f;
+
 public:
 	Board() = default;
 	~Board() override = default;
@@ -34,7 +38,7 @@ public:
 
 	void Idle();
 	void SwapBlock();
-	void Animation();
+	void Animation(float dt);
 	bool CheckMatchAt(sf::Vector2i pos);
 	void CheckMatchAll();
 	void RemoveBlocks();

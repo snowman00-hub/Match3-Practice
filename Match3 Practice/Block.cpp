@@ -2,6 +2,7 @@
 #include "Block.h"
 
 const float Block::moveDuration = 0.15f;
+const float Block::swapDuration = 0.1f;
 
 void Block::SetBlockType(BlockTypes type)
 {
@@ -50,6 +51,13 @@ void Block::Update(float dt)
 	{
 		sf::Vector2f pos = GetPosition();
 		pos += moveDir * moveSpeed * dt;
+		SetPosition(pos);
+	}
+
+	if (isSwapping)
+	{
+		sf::Vector2f pos = GetPosition();
+		pos += moveDir * swapSpeed * dt;
 		SetPosition(pos);
 	}
 }

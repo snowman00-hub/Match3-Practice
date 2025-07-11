@@ -57,9 +57,17 @@ void Board::Idle()
 
 	if (selectedBlock && targetBlock)
 	{
-		sf::Vector2i temp = selectedBlock->GetBoardPos();
-		selectedBlock->SetBoardPos(targetBlock->GetBoardPos());
-		targetBlock->SetBoardPos(temp);
+		sf::Vector2i selectedPos = selectedBlock->GetBoardPos();
+		sf::Vector2i targetPos = targetBlock->GetBoardPos();
+		selectedBlock->SetBoardPos(targetPos);
+		targetBlock->SetBoardPos(selectedPos);
+
+		selectedBlock->SetMoveDir((sf::Vector2f)(targetPos - selectedPos));
+		targetBlock->SetMoveDir((sf::Vector2f)(selectedPos - targetPos));
+
+		selectedBlock->SetIsSwapping(true);
+		targetBlock->SetIsSwapping(true);
+		isSwapping = true;
 
 		currentState = GameState::Animation;
 		nextState = GameState::Swap;
@@ -75,10 +83,47 @@ void Board::SwapBlock()
 	{
 		RemoveBlocks();
 	}
+	else
+	{
+		sf::Vector2i selectedPos = selectedBlock->GetBoardPos();
+		sf::Vector2i targetPos = targetBlock->GetBoardPos();
+		selectedBlock->SetBoardPos(targetPos);
+		targetBlock->SetBoardPos(selectedPos);
+
+		selectedBlock->SetMoveDir((sf::Vector2f)(targetPos - selectedPos));
+		targetBlock->SetMoveDir((sf::Vector2f)(selectedPos - targetPos));
+
+		selectedBlock->SetIsSwapping(true);
+		targetBlock->SetIsSwapping(true);
+
+		currentState = GameState::Animation;
+		nextState = GameState::Idle;
+	}
 }
 
-void Board::Animation()
+void Board::Animation(float dt)
 {
+	aniTimer += dt;
+	if (isSwapping)
+	{
+		if (aniTimer > Block::swapDuration)
+		{
+			selectedBlock->SetMoveDir({ 0.f,0.f });
+			selectedBlock->SetIsSwapping(false);
+			targetBlock->SetMoveDir({ 0.f,0.f });
+			targetBlock->SetIsSwapping(false);
+
+			aniTimer = 0.f;
+			currentState = nextState;
+
+			if (nextState != GameState::Swap)
+			{
+				isSwapping = false;
+				selectedBlock = nullptr;
+				targetBlock = nullptr;
+			}
+		}
+	}
 }
 
 bool Board::CheckMatchAt(sf::Vector2i pos)
@@ -155,6 +200,7 @@ void Board::Update(float dt)
 			SwapBlock();
 			break;
 		case GameState::Animation:
+			Animation(dt);
 			break;
 		case GameState::MatchCheck:
 			break;
