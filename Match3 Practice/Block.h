@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Animator.h"
 
 class Block : public GameObject
 {
@@ -7,9 +8,11 @@ public:
 	static const int SIZE = 60;
 	static const float moveDuration;
 	static const float swapDuration;
+	static const float removeDuration;
 
 protected:
 	sf::Sprite block;
+	Animator animator;
 
 	sf::Vector2i boardPos;
 	sf::Vector2f moveDir = { 0.f,0.f };
@@ -22,6 +25,7 @@ protected:
 
 	bool isMoving = false;
 	bool isSwapping = false;
+	bool isRemoving = false;
 
 public:
 	Block() = default;
@@ -32,6 +36,7 @@ public:
 	void SetMoveDir(sf::Vector2f dir) { moveDir = dir; }
 	void SetIsMoving(bool b) { isMoving = b; }
 	void SetIsSwapping(bool b) { isSwapping = b; }
+	void SetIsRemoving(bool b) { isRemoving = b; }
 
 	BlockTypes GetBlockType() const { return type; }
 	sf::Vector2i GetBoardPos() const { return boardPos; }
@@ -45,4 +50,6 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void PlaySparkle() { animator.Play("animations/sparkle.csv"); }
 };

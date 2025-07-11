@@ -18,7 +18,8 @@ protected:
 
 	sf::Vector2i mousePos;
 
-	std::vector<sf::Vector2i> removePos;
+	std::unordered_set<Block*> removeBlocks;
+	std::vector<Block*> blockPool;
 
 	GameState currentState = GameState::Idle;
 	GameState nextState = GameState::Idle;
@@ -27,6 +28,7 @@ protected:
 	const float boardTop = 150.f;
 
 	bool isSwapping = false;
+	bool isRemoving = false;
 
 	float aniTimer = 0.f;
 

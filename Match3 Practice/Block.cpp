@@ -3,6 +3,7 @@
 
 const float Block::moveDuration = 0.15f;
 const float Block::swapDuration = 0.1f;
+const float Block::removeDuration = 0.4f;
 
 void Block::SetBlockType(BlockTypes type)
 {
@@ -33,6 +34,8 @@ void Block::SetOrigin(Origins preset)
 
 void Block::Init()
 {
+	animator.SetTarget(&block);
+
 	block.setTexture(TEXTURE_MGR.Get(blockTexId));
 	sortingLayer = SortingLayers::Foreground;
 }
@@ -59,6 +62,11 @@ void Block::Update(float dt)
 		sf::Vector2f pos = GetPosition();
 		pos += moveDir * swapSpeed * dt;
 		SetPosition(pos);
+	}
+
+	if (isRemoving)
+	{		
+		animator.Update(dt);
 	}
 }
 

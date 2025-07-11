@@ -102,13 +102,10 @@ void Board::SwapBlock()
 
 	if (isMatchS || isMatchT)
 	{
-		std::cout << "isMatch!!" << std::endl;
-
-		currentState = GameState::Idle;
 		isSwapping = false;
 		selectedBlock = nullptr;
 		targetBlock = nullptr;
-		RemoveBlocks();
+		currentState = GameState::Remove;
 	}
 	else
 	{
@@ -153,6 +150,23 @@ void Board::Animation(float dt)
 				selectedBlock = nullptr;
 				targetBlock = nullptr;
 			}
+		}
+	}
+
+	if (isRemoving)
+	{
+		if (aniTimer > Block::removeDuration)
+		{
+			aniTimer = 0.f;
+
+			for (auto block : blockPool)
+			{
+				block->SetActive(false);
+				block->SetIsRemoving(false);
+				blocks[block->GetBoardPos().y][block->GetBoardPos().x] = nullptr;
+			}
+
+			currentState = GameState::Idle; // Drop으로 나중에 고치기
 		}
 	}
 }
@@ -209,7 +223,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		isMatch = true;
 		for (auto pos : tempPos)
 		{
-			removePos.push_back(pos);
+			removeBlocks.insert(blocks[pos.y][pos.x]);
 		}
 		tempPos.clear();
 	}
@@ -261,7 +275,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		isMatch = true;
 		for (auto pos : tempPos)
 		{
-			removePos.push_back(pos);
+			removeBlocks.insert(blocks[pos.y][pos.x]);
 		}
 	}
 
@@ -282,10 +296,22 @@ bool Board::CheckMatchAll()
 
 void Board::RemoveBlocks()
 {
+	for (auto block : removeBlocks)
+	{
+		block->SetIsRemoving(true);
+		block->PlaySparkle();
+		blockPool.push_back(block);
+	}
+	removeBlocks.clear();
+	isRemoving = true;
+
+	currentState = GameState::Animation;
+	nextState = GameState::Drop;
 }
 
 void Board::DropBlocks()
 {
+
 }
 
 void Board::Init()
@@ -341,10 +367,13 @@ void Board::Update(float dt)
 			Animation(dt);
 			break;
 		case GameState::MatchCheck:
+			CheckMatchAll();
 			break;
 		case GameState::Remove:
+			RemoveBlocks();
 			break;
 		case GameState::Drop:
+			DropBlocks();
 			break;
 	}	
 
@@ -352,6 +381,9 @@ void Board::Update(float dt)
 	{
 		for (int x = 0; x < cols; x++)
 		{
+			if (!blocks[y][x])
+				continue;
+
 			blocks[y][x]->Update(dt);
 		}
 	}
@@ -364,6 +396,10 @@ void Board::Draw(sf::RenderWindow& window)
 		for (int x = 0; x < cols; x++)
 		{
 			tiles[y][x]->Draw(window);
+
+			if (!blocks[y][x])
+				continue;
+
 			blocks[y][x]->Draw(window);
 		}
 	}
