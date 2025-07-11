@@ -59,11 +59,27 @@ void Board::Idle()
 	{
 		sf::Vector2i selectedPos = selectedBlock->GetBoardPos();
 		sf::Vector2i targetPos = targetBlock->GetBoardPos();
+		sf::Vector2i moveDir = targetPos - selectedPos;
+		if (moveDir == sf::Vector2i(1, 1) || moveDir == sf::Vector2i(-1,1))
+		{
+			moveDir = sf::Vector2i(0, 1);
+			targetBlock = blocks[selectedPos.y + 1][selectedPos.x];
+			targetPos = targetBlock->GetBoardPos();
+		}
+		else if (moveDir == sf::Vector2i(1, -1) || moveDir == sf::Vector2i(-1, -1))
+		{
+			moveDir = sf::Vector2i(0, -1);
+			targetBlock = blocks[selectedPos.y - 1][selectedPos.x];
+			targetPos = targetBlock->GetBoardPos();
+		}
+
+		blocks[selectedPos.y][selectedPos.x] = targetBlock;
+		blocks[targetPos.y][targetPos.x] = selectedBlock;
+
 		selectedBlock->SetBoardPos(targetPos);
 		targetBlock->SetBoardPos(selectedPos);
-
-		selectedBlock->SetMoveDir((sf::Vector2f)(targetPos - selectedPos));
-		targetBlock->SetMoveDir((sf::Vector2f)(selectedPos - targetPos));
+		selectedBlock->SetMoveDir((sf::Vector2f)(moveDir));
+		targetBlock->SetMoveDir((sf::Vector2f)(-moveDir));
 
 		selectedBlock->SetIsSwapping(true);
 		targetBlock->SetIsSwapping(true);
@@ -71,6 +87,11 @@ void Board::Idle()
 
 		currentState = GameState::Animation;
 		nextState = GameState::Swap;
+	}
+
+	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
+	{
+		selectedBlock = nullptr;
 	}
 }
 
@@ -81,12 +102,22 @@ void Board::SwapBlock()
 
 	if (isMatchS || isMatchT)
 	{
+		std::cout << "isMatch!!" << std::endl;
+
+		currentState = GameState::Idle;
+		isSwapping = false;
+		selectedBlock = nullptr;
+		targetBlock = nullptr;
 		RemoveBlocks();
 	}
 	else
 	{
 		sf::Vector2i selectedPos = selectedBlock->GetBoardPos();
 		sf::Vector2i targetPos = targetBlock->GetBoardPos();
+
+		blocks[selectedPos.y][selectedPos.x] = targetBlock;
+		blocks[targetPos.y][targetPos.x] = selectedBlock;
+
 		selectedBlock->SetBoardPos(targetPos);
 		targetBlock->SetBoardPos(selectedPos);
 
@@ -128,18 +159,125 @@ void Board::Animation(float dt)
 
 bool Board::CheckMatchAt(sf::Vector2i pos)
 {
-	return false;
+	int x = pos.x;
+	int y = pos.y;
+	int matchCount = 1;
+	bool isMatch = false;
+	BlockTypes type = blocks[y][x]->GetBlockType();
+
+	std::vector<sf::Vector2i> tempPos;
+	tempPos.push_back(pos);
+
+	// 가로 검사
+	int nx = x;
+	while (true)
+	{
+		nx--;
+		if (nx < 0)
+			break;
+
+		if (type == blocks[y][nx]->GetBlockType())
+		{
+			tempPos.push_back(sf::Vector2i(nx, y));
+			matchCount++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	nx = x;
+	while (true)
+	{
+		nx++;
+		if (nx >= cols)
+			break;
+
+		if (type == blocks[y][nx]->GetBlockType())
+		{
+			tempPos.push_back(sf::Vector2i(nx, y));
+			matchCount++;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	if (matchCount >= 3)
+	{
+		isMatch = true;
+		for (auto pos : tempPos)
+		{
+			removePos.push_back(pos);
+		}
+		tempPos.clear();
+	}
+	else
+	{
+		tempPos.clear();
+		tempPos.push_back(pos);
+		matchCount = 1;
+	}
+
+	// 세로 검사
+	int ny = y;
+	while (true)
+	{
+		ny--;
+		if (ny < 0)
+			break;
+
+		if (type == blocks[ny][x]->GetBlockType())
+		{
+			tempPos.push_back(sf::Vector2i(x, ny));
+			matchCount++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	ny = y;
+	while (true)
+	{
+		ny++;
+		if (ny >= rows)
+			break;
+
+		if (type == blocks[ny][x]->GetBlockType())
+		{
+			tempPos.push_back(sf::Vector2i(x, ny));
+			matchCount++;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	if (matchCount >= 3)
+	{
+		isMatch = true;
+		for (auto pos : tempPos)
+		{
+			removePos.push_back(pos);
+		}
+	}
+
+	return isMatch;
 }
 
-void Board::CheckMatchAll()
+bool Board::CheckMatchAll()
 {
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < cols; x++)
 		{
-			blocks[y][x];
+			CheckMatchAt(sf::Vector2i(x, y));
 		}
 	}
+	return false;
 }
 
 void Board::RemoveBlocks()
@@ -209,10 +347,6 @@ void Board::Update(float dt)
 		case GameState::Drop:
 			break;
 	}	
-
-	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
-	{
-	}
 
 	for (int y = 0; y < rows; y++)
 	{

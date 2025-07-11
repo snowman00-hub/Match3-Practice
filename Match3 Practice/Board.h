@@ -40,7 +40,7 @@ public:
 	void SwapBlock();
 	void Animation(float dt);
 	bool CheckMatchAt(sf::Vector2i pos);
-	void CheckMatchAll();
+	bool CheckMatchAll();
 	void RemoveBlocks();
 	void DropBlocks();
 
