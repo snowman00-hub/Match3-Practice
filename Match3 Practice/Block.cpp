@@ -48,9 +48,9 @@ void Block::Update(float dt)
 {
 	if (isMoving)
 	{
-		sf::Vector2f pos = block.getPosition();
+		sf::Vector2f pos = GetPosition();
 		pos += moveDir * moveSpeed * dt;
-		block.setPosition(pos);
+		SetPosition(pos);
 	}
 }
 

@@ -36,15 +36,57 @@ void Board::SetBoard(int* arr)
 	}
 }
 
-void Board::SwapBlock(sf::Vector2i Pos, sf::Vector2i destPos)
+void Board::Idle()
 {
+	mousePos = InputMgr::GetMousePosition();
+
+	if (InputMgr::GetMouseButton(sf::Mouse::Left))
+	{
+		int x = (mousePos.x - boardLeft) / Block::SIZE;
+		int y = (mousePos.y - boardTop) / Block::SIZE;
+
+		if (!selectedBlock)
+		{
+			selectedBlock = blocks[y][x];
+		}
+		else if (selectedBlock != blocks[y][x])
+		{
+			targetBlock = blocks[y][x];
+		}
+	}
+
+	if (selectedBlock && targetBlock)
+	{
+		sf::Vector2i temp = selectedBlock->GetBoardPos();
+		selectedBlock->SetBoardPos(targetBlock->GetBoardPos());
+		targetBlock->SetBoardPos(temp);
+
+		currentState = GameState::Animation;
+		nextState = GameState::Swap;
+	}
+}
+
+void Board::SwapBlock()
+{
+	bool isMatchS = CheckMatchAt(selectedBlock->GetBoardPos());
+	bool isMatchT = CheckMatchAt(targetBlock->GetBoardPos());
+
+	if (isMatchS || isMatchT)
+	{
+		RemoveBlocks();
+	}
 }
 
 void Board::Animation()
 {
 }
 
-void Board::MatchCheck()
+bool Board::CheckMatchAt(sf::Vector2i pos)
+{
+	return false;
+}
+
+void Board::CheckMatchAll()
 {
 	for (int y = 0; y < rows; y++)
 	{
@@ -104,7 +146,27 @@ void Board::Reset()
 
 void Board::Update(float dt)
 {
+	switch (currentState)
+	{
+		case GameState::Idle:
+			Idle();
+			break;
+		case GameState::Swap:
+			SwapBlock();
+			break;
+		case GameState::Animation:
+			break;
+		case GameState::MatchCheck:
+			break;
+		case GameState::Remove:
+			break;
+		case GameState::Drop:
+			break;
+	}	
 
+	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
+	{
+	}
 
 	for (int y = 0; y < rows; y++)
 	{

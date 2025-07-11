@@ -46,7 +46,7 @@ void SceneGame::Enter()
 	Scene::Enter();
 
 	cursor.setTexture(TEXTURE_MGR.Get("graphics/cursor.png"));
-	Utils::SetOrigin(cursor, Origins::MC);
+	Utils::SetOrigin(cursor, Origins::TL);
 }
 
 void SceneGame::Exit()

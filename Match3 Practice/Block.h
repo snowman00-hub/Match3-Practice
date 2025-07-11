@@ -29,6 +29,9 @@ public:
 	void SetMoveDir(sf::Vector2f dir) { moveDir = dir; }
 	void SetIsMoving(bool b) { isMoving = b; }
 
+	BlockTypes GetBlockType() const { return type; }
+	sf::Vector2i GetBoardPos() const { return boardPos; }
+
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetOrigin(const sf::Vector2f& o) override;
 	void SetOrigin(Origins preset) override;

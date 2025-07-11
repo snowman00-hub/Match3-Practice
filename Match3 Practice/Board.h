@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
+// WindowSize : 720, 960
+
 class Board : public GameObject
 {
 public:
@@ -11,9 +13,15 @@ protected:
 	Block* blocks[rows][cols];
 	Tile* tiles[rows][cols];
 
+	Block* selectedBlock = nullptr;
+	Block* targetBlock = nullptr;
+
+	sf::Vector2i mousePos;
+
 	std::vector<sf::Vector2i> removePos;
 
-	GameState state = GameState::Idle;
+	GameState currentState = GameState::Idle;
+	GameState nextState = GameState::Idle;
 
 	const float boardLeft = 90.f;
 	const float boardTop = 150.f;
@@ -24,9 +32,11 @@ public:
 
 	void SetBoard(int* arr);
 
-	void SwapBlock(sf::Vector2i Pos, sf::Vector2i destPos);
+	void Idle();
+	void SwapBlock();
 	void Animation();
-	void MatchCheck();
+	bool CheckMatchAt(sf::Vector2i pos);
+	void CheckMatchAll();
 	void RemoveBlocks();
 	void DropBlocks();
 
