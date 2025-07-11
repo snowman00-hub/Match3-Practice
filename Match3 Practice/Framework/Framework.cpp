@@ -6,6 +6,7 @@ void Framework::Init(int w, int h, const std::string& t)
 	window.create(sf::VideoMode(w, h), t);
 
     // texIds, fontIds, soundIds
+    texIds.push_back("graphics/cursor.png");
     texIds.push_back("graphics/blocks.png");
     texIds.push_back("graphics/tiles.png");
     texIds.push_back("graphics/sparkles.png");

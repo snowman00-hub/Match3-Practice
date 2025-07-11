@@ -5,7 +5,8 @@ class SceneGame : public Scene
 {
 protected:
 	Board* board;
-	SpriteGo* test;
+
+	sf::Sprite cursor;
 
 public:
 	SceneGame();
@@ -13,6 +14,7 @@ public:
 
 	void Init() override;
 	void Enter() override;
+	void Exit() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 };

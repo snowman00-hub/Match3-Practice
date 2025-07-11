@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Block.h"
 
+const float Block::moveDuration = 0.15f;
+
 void Block::SetBlockType(BlockTypes type)
 {
 	this->type = type;
@@ -44,6 +46,12 @@ void Block::Reset()
 
 void Block::Update(float dt)
 {
+	if (isMoving)
+	{
+		sf::Vector2f pos = block.getPosition();
+		pos += moveDir * moveSpeed * dt;
+		block.setPosition(pos);
+	}
 }
 
 void Block::Draw(sf::RenderWindow& window)

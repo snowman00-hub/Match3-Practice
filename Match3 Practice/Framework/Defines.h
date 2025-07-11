@@ -56,6 +56,7 @@ enum class BlockTypes
 
 enum class TileTypes
 {
+	None = -1,
 	Default,
 	Painted,
 };

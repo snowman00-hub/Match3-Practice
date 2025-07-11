@@ -11,6 +11,7 @@ void Board::SetBoard(int* arr)
 		for (int x = 0; x < cols; x++)
 		{
 			blockType = (BlockTypes)arr[9 * y + x];
+			tiles[y][x]->SetTileType(TileTypes::Default);
 			if (blockType == BlockTypes::Jem)
 			{
 				blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2,6));
@@ -23,9 +24,9 @@ void Board::SetBoard(int* arr)
 				{
 					blocks[y][x]->SetActive(false);
 					tiles[y][x]->SetActive(false);
+					tiles[y][x]->SetTileType(TileTypes::None);
 				}
 			}
-			tiles[y][x]->SetTileType(TileTypes::Default);
 			tiles[y][x]->SetBoardPos({ x,y });
 			tiles[y][x]->SetPosition({ boardLeft + (float)Tile::SIZE * x, boardTop + (float)Tile::SIZE * y });
 
@@ -103,12 +104,13 @@ void Board::Reset()
 
 void Board::Update(float dt)
 {
+
+
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < cols; x++)
 		{
 			blocks[y][x]->Update(dt);
-			tiles[y][x]->Update(dt);
 		}
 	}
 }

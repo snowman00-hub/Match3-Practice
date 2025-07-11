@@ -3,24 +3,31 @@
 
 class Block : public GameObject
 {
+public:
+	static const int SIZE = 60;
+	static const float moveDuration;
+
 protected:
 	sf::Sprite block;
 
 	sf::Vector2i boardPos;
-	float moveSpeed = 50.f;
+	sf::Vector2f moveDir = { 0.f,0.f };
+	float moveSpeed = SIZE / moveDuration;
 
 	BlockTypes type = BlockTypes::None;
 
 	std::string blockTexId = "graphics/blocks.png";
 
-public:
-	static const int SIZE = 60;
+	bool isMoving = false;
 
+public:
 	Block() = default;
 	~Block() override = default;
 
 	void SetBlockType(BlockTypes type);
 	void SetBoardPos(sf::Vector2i pos) { boardPos = pos; }
+	void SetMoveDir(sf::Vector2f dir) { moveDir = dir; }
+	void SetIsMoving(bool b) { isMoving = b; }
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetOrigin(const sf::Vector2f& o) override;

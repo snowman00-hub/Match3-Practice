@@ -4,7 +4,10 @@
 void Tile::SetTileType(TileTypes type)
 {
 	this->type = type;
-	tile.setTextureRect(sf::IntRect(((int)type) * SIZE, 0, SIZE, SIZE));
+	if (type != TileTypes::None)
+	{
+		tile.setTextureRect(sf::IntRect(((int)type) * SIZE, 0, SIZE, SIZE));
+	}
 }
 
 void Tile::SetPosition(const sf::Vector2f& pos)
@@ -61,5 +64,6 @@ void Tile::Update(float dt)
 
 void Tile::Draw(sf::RenderWindow& window)
 {
-	window.draw(tile);
+	if (type != TileTypes::None)
+		window.draw(tile);
 }
