@@ -1,9 +1,9 @@
 ID,FPS,"LoopType (0: Single, 1: Loop)		",,
-Sparkle,20,0,,
+Sparkle,12,0,,
 "				",,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
-graphics/sparkle.png,0,0,60,60
-graphics/sparkle.png,60,0,60,60
-graphics/sparkle.png,120,0,60,60
-graphics/sparkle.png,180,0,60,60
-graphics/sparkle.png,240,0,60,60
+graphics/sparkles.png,0,0,60,60
+graphics/sparkles.png,60,0,60,60
+graphics/sparkles.png,120,0,60,60
+graphics/sparkles.png,180,0,60,60
+graphics/sparkles.png,240,0,60,60

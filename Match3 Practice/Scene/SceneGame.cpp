@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SceneGame.h"
+#include "Animator.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)

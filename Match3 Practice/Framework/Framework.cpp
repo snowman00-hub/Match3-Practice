@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Framework.h"
+#include "Animator.h"
 
 void Framework::Init(int w, int h, const std::string& t)
 {
@@ -20,6 +21,7 @@ void Framework::Init(int w, int h, const std::string& t)
 	TEXTURE_MGR.Load(texIds);
 	FONT_MGR.Load(fontIds);
 	SOUNDBUFFER_MGR.Load(soundIds);
+    ANI_CLIP_MGR.Load("animations/sparkle.csv");
 
     Utils::Init();
 	InputMgr::Init();
@@ -67,4 +69,5 @@ void Framework::Release()
 	SOUNDBUFFER_MGR.Unload(soundIds);
 	FONT_MGR.Unload(fontIds);
 	TEXTURE_MGR.Unload(texIds);
+    ANI_CLIP_MGR.Unload("animations/sparkle.csv");
 }
