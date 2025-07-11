@@ -3,25 +3,34 @@
 
 void Board::SetBoard(int* arr)
 {
-	BlockTypes type;
+	BlockTypes blockType;
+	TileTypes tileType;
+
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < cols; x++)
 		{
-			type = (BlockTypes)arr[9 * y + x];
-			if (type == BlockTypes::Jem)
+			blockType = (BlockTypes)arr[9 * y + x];
+			if (blockType == BlockTypes::Jem)
 			{
 				blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2,6));
 			}
 			else 
 			{				
-				blocks[y][x]->SetBlockType(type);
+				blocks[y][x]->SetBlockType(blockType);
 
-				if (type == BlockTypes::None)
+				if (blockType == BlockTypes::None)
+				{
 					blocks[y][x]->SetActive(false);
+					tiles[y][x]->SetActive(false);
+				}
 			}
+			tiles[y][x]->SetTileType(TileTypes::Default);
+			tiles[y][x]->SetBoardPos({ x,y });
+			tiles[y][x]->SetPosition({ boardLeft + (float)Tile::SIZE * x, boardTop + (float)Tile::SIZE * y });
+
 			blocks[y][x]->SetBoardPos({ x,y });
-			blocks[y][x]->SetPosition({ 90.f + (float)Block::SIZE * x, (float)Block::SIZE * y });
+			blocks[y][x]->SetPosition({ boardLeft + (float)Block::SIZE * x, boardTop + (float)Block::SIZE * y });
 		}
 	}
 }
@@ -61,6 +70,9 @@ void Board::Init()
 		{
 			blocks[y][x] = new Block();
 			blocks[y][x]->Init();
+
+			tiles[y][x] = new Tile();
+			tiles[y][x]->Init();
 		}
 	}
 }
@@ -72,6 +84,7 @@ void Board::Release()
 		for (int x = 0; x < cols; x++)
 		{
 			blocks[y][x]->Release();
+			tiles[y][x]->Release();
 		}
 	}
 }
@@ -83,6 +96,7 @@ void Board::Reset()
 		for (int x = 0; x < cols; x++)
 		{
 			blocks[y][x]->Reset();
+			tiles[y][x]->Reset();
 		}
 	}
 }
@@ -94,6 +108,7 @@ void Board::Update(float dt)
 		for (int x = 0; x < cols; x++)
 		{
 			blocks[y][x]->Update(dt);
+			tiles[y][x]->Update(dt);
 		}
 	}
 }
@@ -104,6 +119,7 @@ void Board::Draw(sf::RenderWindow& window)
 	{
 		for (int x = 0; x < cols; x++)
 		{
+			tiles[y][x]->Draw(window);
 			blocks[y][x]->Draw(window);
 		}
 	}

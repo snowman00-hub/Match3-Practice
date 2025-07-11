@@ -22,6 +22,7 @@
 #include "InputMgr.h"
 #include "SoundMgr.h"
 #include "Block.h"
+#include "Tile.h"
 #include "Board.h"
 #include "GameObject.h"
 #include "SpriteGo.h"

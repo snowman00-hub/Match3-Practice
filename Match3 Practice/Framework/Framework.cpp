@@ -6,18 +6,10 @@ void Framework::Init(int w, int h, const std::string& t)
 	window.create(sf::VideoMode(w, h), t);
 
     // texIds, fontIds, soundIds
-    texIds.push_back("graphics/greenJem.png");
-    texIds.push_back("graphics/redJem.png");
-    texIds.push_back("graphics/yellowJem.png");
-    texIds.push_back("graphics/blueJem.png");
-    texIds.push_back("graphics/tileDefault.png");
-    texIds.push_back("graphics/sparkles.png");
-    texIds.push_back("graphics/diamond.png");
-    texIds.push_back("graphics/emerald.png");
-    texIds.push_back("graphics/boxObstacle.png");
-    texIds.push_back("graphics/bg_sky.png");
-    texIds.push_back("graphics/bg_day.jpg");
     texIds.push_back("graphics/blocks.png");
+    texIds.push_back("graphics/tiles.png");
+    texIds.push_back("graphics/sparkles.png");
+    texIds.push_back("graphics/bg_sky.png");
 
     fontIds.push_back("fonts/Maplestory Light.ttf");
 

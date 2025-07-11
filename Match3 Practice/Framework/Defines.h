@@ -2,7 +2,9 @@
 
 enum class SortingLayers 
 {
-	Default,
+	Background,
+	Foreground,
+	UI,
 };
 
 enum class Origins
@@ -32,11 +34,11 @@ enum class Sides
 enum class GameState
 {
 	Idle,
-	Animation,
 	Swap,
+	Animation,
 	MatchCheck,
-	RemoveBlocks,
-	DropBlocks
+	Remove,
+	Drop
 };
 
 enum class BlockTypes
@@ -50,4 +52,10 @@ enum class BlockTypes
 	BlueJem,
 	Diamond,
 	Emerald,
+};
+
+enum class TileTypes
+{
+	Default,
+	Painted,
 };

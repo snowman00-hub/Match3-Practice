@@ -1,28 +1,28 @@
 #pragma once
 #include "GameObject.h"
 
-class Block : public GameObject
+class Tile : public GameObject
 {
 protected:
-	sf::Sprite block;
+	sf::Sprite tile;
+	std::string tileTexId = "graphics/tiles.png";
+
+	TileTypes type = TileTypes::Default;
 
 	sf::Vector2i boardPos;
-	float moveSpeed = 50.f;
-
-	BlockTypes type = BlockTypes::None;
-
-	std::string blockTexId = "graphics/blocks.png";
 
 public:
 	static const int SIZE = 60;
 
-	Block() = default;
-	~Block() override = default;
+	Tile() = default;
+	virtual ~Tile() = default;
 
-	void SetBlockType(BlockTypes type);
+	void SetTileType(TileTypes type);
 	void SetBoardPos(sf::Vector2i pos) { boardPos = pos; }
 
 	void SetPosition(const sf::Vector2f& pos) override;
+	void SetRotation(float rot) override;
+	void SetScale(const sf::Vector2f& s) override;
 	void SetOrigin(const sf::Vector2f& o) override;
 	void SetOrigin(Origins preset) override;
 
@@ -32,3 +32,4 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 };
+

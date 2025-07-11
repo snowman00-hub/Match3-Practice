@@ -31,6 +31,7 @@ void Block::SetOrigin(Origins preset)
 void Block::Init()
 {
 	block.setTexture(TEXTURE_MGR.Get(blockTexId));
+	sortingLayer = SortingLayers::Foreground;
 }
 
 void Block::Release()
