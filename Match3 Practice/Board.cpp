@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "Board.h"
+#include "SceneGame.h"
+#include "Tile.h"
+#include "Block.h"
 
 void Board::SetBoardBlock(int* arr)
 {
@@ -227,7 +230,8 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 {
 	int x = pos.x;
 	int y = pos.y;
-	int matchCount = 1;
+	int matchCountH = 1;
+	int matchCountV = 1;
 	bool isMatch = false;
 	BlockTypes type = blocks[y][x]->GetBlockType();
 
@@ -245,7 +249,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		if (type == blocks[y][nx]->GetBlockType())
 		{
 			tempPos.push_back(sf::Vector2i(nx, y));
-			matchCount++;
+			matchCountH++;
 		}
 		else
 		{
@@ -262,7 +266,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		if (type == blocks[y][nx]->GetBlockType())
 		{
 			tempPos.push_back(sf::Vector2i(nx, y));
-			matchCount++;
+			matchCountH++;
 		}
 		else
 		{
@@ -270,7 +274,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		}
 	}
 
-	if (matchCount >= 3)
+	if (matchCountH >= 3)
 	{
 		bool isPainted = false;
 		isMatch = true;
@@ -298,7 +302,6 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 	}
 
 	// 세로 검사
-	matchCount = 1;
 	int ny = y;
 	while (true)
 	{
@@ -309,7 +312,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		if (type == blocks[ny][x]->GetBlockType())
 		{
 			tempPos.push_back(sf::Vector2i(x, ny));
-			matchCount++;
+			matchCountV++;
 		}
 		else
 		{
@@ -326,7 +329,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		if (type == blocks[ny][x]->GetBlockType())
 		{
 			tempPos.push_back(sf::Vector2i(x, ny));
-			matchCount++;
+			matchCountV++;
 		}
 		else
 		{
@@ -334,7 +337,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		}
 	}
 
-	if (matchCount >= 3)
+	if (matchCountV >= 3)
 	{
 		bool isPainted = false;
 		isMatch = true;
@@ -351,6 +354,17 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 			for (auto pos : tempPos)
 				paintTiles.insert(tiles[pos.y][pos.x]);
 		}
+	}
+
+	if (matchCountH >= 3 && matchCountV >= 3)
+	{
+		removeBlocks.erase(blocks[pos.y][pos.x]);
+		blocks[pos.y][pos.x]->SetBlockType(BlockTypes::Emerald);
+	}
+	else if (matchCountH >= 4 || matchCountV >= 4)
+	{
+		removeBlocks.erase(blocks[pos.y][pos.x]);
+		blocks[pos.y][pos.x]->SetBlockType(BlockTypes::Diamond);
 	}
 
 	return isMatch;
@@ -497,8 +511,6 @@ void Board::DropBlocks()
 
 void Board::Init()
 {
-	scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
-
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < cols; x++)
@@ -530,6 +542,8 @@ void Board::Release()
 
 void Board::Reset()
 {
+	scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < cols; x++)

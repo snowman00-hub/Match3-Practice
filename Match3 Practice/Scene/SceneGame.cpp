@@ -1,13 +1,10 @@
 #include "stdafx.h"
 #include "SceneGame.h"
 #include "Animator.h"
+#include "Board.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
-{
-}
-
-SceneGame::~SceneGame()
 {
 }
 

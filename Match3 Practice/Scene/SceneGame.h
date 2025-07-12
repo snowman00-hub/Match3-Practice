@@ -1,6 +1,8 @@
 #pragma once
 #include "Scene.h"
 
+class Board;
+
 class SceneGame : public Scene
 {
 protected:
@@ -10,7 +12,7 @@ protected:
 
 public:
 	SceneGame();
-	~SceneGame() override;
+	~SceneGame() override = default;
 
 	void Init() override;
 	void Enter() override;

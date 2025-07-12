@@ -1,8 +1,10 @@
 #pragma once
 #include "GameObject.h"
-#include "SceneGame.h"
 
 // WindowSize : 720, 960
+class SceneGame;
+class Block;
+class Tile;
 
 class Board : public GameObject
 {
