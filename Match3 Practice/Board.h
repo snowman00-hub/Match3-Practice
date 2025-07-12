@@ -24,6 +24,7 @@ protected:
 	sf::Vector2i mousePos;
 
 	std::unordered_set<Block*> removeBlocks;
+	std::unordered_set<Block*> nextRemoveBlocks;
 	std::unordered_set<Tile*> paintTiles;
 	std::vector<Block*> dropBlocks;
 	std::vector<Block*> blockPool;
@@ -58,6 +59,7 @@ public:
 	bool CheckMatchAt(sf::Vector2i pos);
 	void CheckMatchAll();
 	void CheckObstacleNeighbors(sf::Vector2i pos);
+	void CheckSpecialBlockRemoved();
 	void RemoveBlocks();
 	void DropBlocks();
 

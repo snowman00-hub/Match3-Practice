@@ -185,8 +185,7 @@ void Board::Animation(float dt)
 			}
 		}
 	}
-
-	if (isRemoving)
+	else if (isRemoving)
 	{
 		if (aniTimer > Block::removeDuration)
 		{
@@ -197,15 +196,21 @@ void Board::Animation(float dt)
 			{
 				block->SetActive(false);
 				block->SetIsRemoving(false);
+				blockPool.push_back(block);
 				blocks[block->GetBoardPos().y][block->GetBoardPos().x] = nullptr;
 			}
 			removeBlocks.clear();
 
-			currentState = GameState::Drop; 
+			for (auto block : nextRemoveBlocks)
+			{
+				removeBlocks.insert(block);
+			}
+			nextRemoveBlocks.clear();
+
+			currentState = nextState;
 		}
 	}
-
-	if (isDropping)
+	else if (isDropping)
 	{
 		if (aniTimer > Block::dropDuration)
 		{
@@ -234,6 +239,9 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 	int matchCountV = 1;
 	bool isMatch = false;
 	BlockTypes type = blocks[y][x]->GetBlockType();
+
+	if (type == BlockTypes::None)
+		return false;
 
 	std::vector<sf::Vector2i> tempPos;
 	tempPos.push_back(pos);
@@ -407,13 +415,73 @@ void Board::CheckObstacleNeighbors(sf::Vector2i pos)
 	}
 }
 
+void Board::CheckSpecialBlockRemoved()
+{
+	for (auto block : removeBlocks)
+	{
+		if (block->GetBlockType() == BlockTypes::Diamond)
+		{
+			sf::Vector2i pos = block->GetBoardPos();
+			bool isPainted = tiles[pos.y][pos.x]->GetTileType() == TileTypes::Painted;
+			for (int i = 0; i < cols; ++i)
+			{
+				if (blocks[pos.y][i] && blocks[pos.y][i]->GetBlockType() != BlockTypes::None)
+				{
+					nextRemoveBlocks.insert(blocks[pos.y][i]);
+
+					if (isPainted)
+						tiles[pos.y][i]->SetTileType(TileTypes::Painted);
+				}
+			}
+			for (int i = 0; i < rows; ++i)
+			{
+				if (blocks[i][pos.x] && blocks[i][pos.x]->GetBlockType() != BlockTypes::None)
+				{
+					nextRemoveBlocks.insert(blocks[i][pos.x]);
+
+					if (isPainted)
+						tiles[i][pos.x]->SetTileType(TileTypes::Painted);
+				}
+			}
+		}
+
+		if (block->GetBlockType() == BlockTypes::Emerald)
+		{
+			sf::Vector2i pos = block->GetBoardPos();
+			bool isPainted = tiles[pos.y][pos.x]->GetTileType() == TileTypes::Painted;
+			for (int y = pos.y - 2; y <= pos.y + 2; ++y)
+			{
+				for (int x = pos.x - 2; x <= pos.x + 2; ++x)
+				{
+					if (x < 0 || x > cols - 1 || y < 0 || y > rows - 1)
+						continue;
+
+					if (blocks[y][x] && blocks[y][x]->GetBlockType() != BlockTypes::None)
+					{
+						nextRemoveBlocks.insert(blocks[y][x]);
+
+						if (isPainted)
+							tiles[y][x]->SetTileType(TileTypes::Painted);
+					}
+				}
+			}
+		}
+	}
+
+	for (auto block : removeBlocks)
+	{
+		nextRemoveBlocks.erase(block);
+	}
+}
+
 void Board::RemoveBlocks()
 {
+	CheckSpecialBlockRemoved();	
+
 	for (auto block : removeBlocks)
 	{
 		block->SetIsRemoving(true);
 		block->PlaySparkle();
-		blockPool.push_back(block);
 	}
 
 	for (auto tile : paintTiles)
@@ -429,7 +497,14 @@ void Board::RemoveBlocks()
 	isRemoving = true;
 
 	currentState = GameState::Animation;
-	nextState = GameState::Drop;
+	if (!nextRemoveBlocks.empty())
+	{
+		nextState = GameState::Remove;
+	}
+	else
+	{
+		nextState = GameState::Drop;
+	}
 }
 
 void Board::DropBlocks()
@@ -479,26 +554,24 @@ void Board::DropBlocks()
 	}
 
 	// 맨윗 줄 검사할 때
-	for (int y = 0; y >= 0; --y)
+	int y = 0;
+	for (int x = cols - 1; x >= 0; --x)
 	{
-		for (int x = cols - 1; x >= 0; --x)
+		if (!blocks[y][x])
 		{
-			if (!blocks[y][x])
-			{
-				blocks[y][x] = blockPool.back();
-				blockPool.pop_back();
-				blocks[y][x]->Reset();
-				blocks[y][x]->SetCanMove(true);
-				blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2, 6));
-				blocks[y][x]->SetBoardPos({ x,y });
-				blocks[y][x]->SetPosition({ boardLeft + (float)Block::SIZE * x, boardTop - (float)Block::SIZE });
-				blocks[y][x]->SetMoveDir({ 0.f,1.f });
-				blocks[y][x]->SetIsDropping(true);
-				dropBlocks.push_back(blocks[y][x]);
-				isDropCheck = true;
-			}
+			blocks[y][x] = blockPool.back();
+			blockPool.pop_back();
+			blocks[y][x]->Reset();
+			blocks[y][x]->SetCanMove(true);
+			blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2, 6));
+			blocks[y][x]->SetBoardPos({ x,y });
+			blocks[y][x]->SetPosition({ boardLeft + (float)Block::SIZE * x, boardTop - (float)Block::SIZE });
+			blocks[y][x]->SetMoveDir({ 0.f,1.f });
+			blocks[y][x]->SetIsDropping(true);
+			dropBlocks.push_back(blocks[y][x]);
+			isDropCheck = true;
 		}
-	}
+	}	
 
 	if (isDropCheck)
 		nextState = GameState::Drop;
