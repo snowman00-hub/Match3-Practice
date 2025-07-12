@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "SceneGame.h"
 
 // WindowSize : 720, 960
 
@@ -10,6 +11,8 @@ public:
 	static const int cols = 9;
 
 protected:
+	SceneGame* scene = nullptr;
+
 	Block* blocks[rows][cols];
 	Tile* tiles[rows][cols];
 
@@ -19,6 +22,7 @@ protected:
 	sf::Vector2i mousePos;
 
 	std::unordered_set<Block*> removeBlocks;
+	std::unordered_set<Tile*> paintTiles;
 	std::vector<Block*> dropBlocks;
 	std::vector<Block*> blockPool;
 
@@ -34,12 +38,17 @@ protected:
 
 	float aniTimer = 0.f;
 
+	int paintedCount;
+	int maxPaintableCount;
+
 public:
 	Board() = default;
 	~Board() override = default;
 
 	void SetBoardBlock(int* arr);
-	void SetBoardTile(int* arr);
+	void SetBoardTile(int* arr, int count, int maxCount);
+
+	int GetRemainPaintableCount() { return maxPaintableCount - paintedCount; }
 
 	void Idle();
 	void SwapBlock();

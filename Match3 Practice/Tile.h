@@ -20,6 +20,8 @@ public:
 	void SetTileType(TileTypes type);
 	void SetBoardPos(sf::Vector2i pos) { boardPos = pos; }
 
+	TileTypes GetTileType() const { return type; }
+
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float rot) override;
 	void SetScale(const sf::Vector2f& s) override;

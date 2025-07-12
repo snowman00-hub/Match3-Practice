@@ -31,8 +31,10 @@ void Board::SetBoardBlock(int* arr)
 	}
 }
 
-void Board::SetBoardTile(int* arr)
+void Board::SetBoardTile(int* arr, int count, int maxCount)
 {
+	paintedCount = count;
+	maxPaintableCount = maxCount;
 	TileTypes tileType;
 	for (int y = 0; y < rows; y++)
 	{
@@ -270,12 +272,23 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 
 	if (matchCount >= 3)
 	{
+		bool isPainted = false;
 		isMatch = true;
+
 		for (auto pos : tempPos)
 		{
 			removeBlocks.insert(blocks[pos.y][pos.x]);
 			CheckObstacleNeighbors(pos);
+			if (tiles[pos.y][pos.x]->GetTileType() == TileTypes::Painted)
+				isPainted = true;
 		}
+
+		if (isPainted)
+		{
+			for (auto pos : tempPos)
+				paintTiles.insert(tiles[pos.y][pos.x]);
+		}
+
 		tempPos.clear();
 	}
 	else
@@ -323,11 +336,20 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 
 	if (matchCount >= 3)
 	{
+		bool isPainted = false;
 		isMatch = true;
 		for (auto pos : tempPos)
 		{
 			removeBlocks.insert(blocks[pos.y][pos.x]);
 			CheckObstacleNeighbors(pos);
+			if (tiles[pos.y][pos.x]->GetTileType() == TileTypes::Painted)
+				isPainted = true;
+		}
+
+		if (isPainted)
+		{
+			for (auto pos : tempPos)
+				paintTiles.insert(tiles[pos.y][pos.x]);
 		}
 	}
 
@@ -379,6 +401,17 @@ void Board::RemoveBlocks()
 		block->PlaySparkle();
 		blockPool.push_back(block);
 	}
+
+	for (auto tile : paintTiles)
+	{
+		if (tile->GetTileType() != TileTypes::Painted)
+		{
+			tile->SetTileType(TileTypes::Painted);
+			paintedCount++;
+		}
+	}
+	paintTiles.clear();
+
 	isRemoving = true;
 
 	currentState = GameState::Animation;
@@ -464,6 +497,8 @@ void Board::DropBlocks()
 
 void Board::Init()
 {
+	scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < cols; x++)

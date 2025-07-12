@@ -49,7 +49,7 @@ void SceneGame::Init()
 	Scene::Init();
 
 	board->SetBoardBlock(initialBlockState);
-	board->SetBoardTile(initialTileState);
+	board->SetBoardTile(initialTileState,5,81);
 }
 
 void SceneGame::Enter()
