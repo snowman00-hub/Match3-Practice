@@ -38,7 +38,8 @@ public:
 	Board() = default;
 	~Board() override = default;
 
-	void SetBoard(int* arr);
+	void SetBoardBlock(int* arr);
+	void SetBoardTile(int* arr);
 
 	void Idle();
 	void SwapBlock();

@@ -1,17 +1,16 @@
 #include "stdafx.h"
 #include "Board.h"
 
-void Board::SetBoard(int* arr)
+void Board::SetBoardBlock(int* arr)
 {
 	BlockTypes blockType;
-	TileTypes tileType;
 
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < cols; x++)
 		{
 			blockType = (BlockTypes)arr[9 * y + x];
-			tiles[y][x]->SetTileType(TileTypes::Default);
+
 			if (blockType == BlockTypes::Jem)
 			{
 				blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2,6));
@@ -24,15 +23,34 @@ void Board::SetBoard(int* arr)
 				if (blockType == BlockTypes::None)
 				{
 					blocks[y][x]->SetActive(false);
-					tiles[y][x]->SetActive(false);
-					tiles[y][x]->SetTileType(TileTypes::None);
 				}
+			}
+			blocks[y][x]->SetBoardPos({ x,y });
+			blocks[y][x]->SetPosition({ boardLeft + (float)Block::SIZE * x, boardTop + (float)Block::SIZE * y });
+		}
+	}
+}
+
+void Board::SetBoardTile(int* arr)
+{
+	TileTypes tileType;
+	for (int y = 0; y < rows; y++)
+	{
+		for (int x = 0; x < cols; x++)
+		{
+			tileType = (TileTypes)arr[9 * y + x];
+
+			if (tileType == TileTypes::None)
+			{
+				tiles[y][x]->SetActive(false);
+				tiles[y][x]->SetTileType(TileTypes::None);
+			}
+			else
+			{
+				tiles[y][x]->SetTileType(tileType);
 			}
 			tiles[y][x]->SetBoardPos({ x,y });
 			tiles[y][x]->SetPosition({ boardLeft + (float)Tile::SIZE * x, boardTop + (float)Tile::SIZE * y });
-
-			blocks[y][x]->SetBoardPos({ x,y });
-			blocks[y][x]->SetPosition({ boardLeft + (float)Block::SIZE * x, boardTop + (float)Block::SIZE * y });
 		}
 	}
 }
