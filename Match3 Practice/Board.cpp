@@ -19,6 +19,7 @@ void Board::SetBoard(int* arr)
 			else 
 			{				
 				blocks[y][x]->SetBlockType(blockType);
+				blocks[y][x]->SetCanMove(false);
 
 				if (blockType == BlockTypes::None)
 				{
@@ -40,18 +41,22 @@ void Board::Idle()
 {
 	mousePos = InputMgr::GetMousePosition();
 
-	if (InputMgr::GetMouseButton(sf::Mouse::Left))
+	if (mousePos.x >= boardLeft && mousePos.x < boardLeft + Block::SIZE * cols
+		&& mousePos.y >= boardTop && mousePos.y < boardTop + Block::SIZE * rows)
 	{
-		int x = (mousePos.x - boardLeft) / Block::SIZE;
-		int y = (mousePos.y - boardTop) / Block::SIZE;
+		if (InputMgr::GetMouseButton(sf::Mouse::Left))
+		{
+			int x = (mousePos.x - boardLeft) / Block::SIZE;
+			int y = (mousePos.y - boardTop) / Block::SIZE;
 
-		if (!selectedBlock)
-		{
-			selectedBlock = blocks[y][x];
-		}
-		else if (selectedBlock != blocks[y][x])
-		{
-			targetBlock = blocks[y][x];
+			if (!selectedBlock && blocks[y][x]->GetCanMove())
+			{
+				selectedBlock = blocks[y][x];
+			}
+			else if (selectedBlock != blocks[y][x] && blocks[y][x]->GetCanMove())
+			{
+				targetBlock = blocks[y][x];
+			}
 		}
 	}
 
@@ -136,8 +141,13 @@ void Board::Animation(float dt)
 	{
 		if (aniTimer > Block::swapDuration)
 		{
+			sf::Vector2i pos = selectedBlock->GetBoardPos();
+			selectedBlock->SetPosition({ boardLeft + (float)Block::SIZE * pos.x, boardTop + (float)Block::SIZE * pos.y });
 			selectedBlock->SetMoveDir({ 0.f,0.f });
 			selectedBlock->SetIsSwapping(false);
+
+			pos = targetBlock->GetBoardPos();
+			targetBlock->SetPosition({ boardLeft + (float)Block::SIZE * pos.x, boardTop + (float)Block::SIZE * pos.y });
 			targetBlock->SetMoveDir({ 0.f,0.f });
 			targetBlock->SetIsSwapping(false);
 
@@ -158,15 +168,37 @@ void Board::Animation(float dt)
 		if (aniTimer > Block::removeDuration)
 		{
 			aniTimer = 0.f;
+			isRemoving = false;
 
-			for (auto block : blockPool)
+			for (auto block : removeBlocks)
 			{
 				block->SetActive(false);
 				block->SetIsRemoving(false);
 				blocks[block->GetBoardPos().y][block->GetBoardPos().x] = nullptr;
 			}
+			removeBlocks.clear();
 
-			currentState = GameState::Idle; // Drop으로 나중에 고치기
+			currentState = GameState::Drop; 
+		}
+	}
+
+	if (isDropping)
+	{
+		if (aniTimer > Block::dropDuration)
+		{
+			aniTimer = 0.f;
+			isDropping = false;
+
+			for (auto block : dropBlocks)
+			{
+				sf::Vector2i pos = block->GetBoardPos();
+				block->SetPosition({ boardLeft + (float)Block::SIZE * pos.x, boardTop + (float)Block::SIZE * pos.y });
+				block->SetIsDropping(false);
+				block->SetMoveDir({ 0.f,0.f });
+			}
+			dropBlocks.clear();
+				
+			currentState = nextState;
 		}
 	}
 }
@@ -231,10 +263,10 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 	{
 		tempPos.clear();
 		tempPos.push_back(pos);
-		matchCount = 1;
 	}
 
 	// 세로 검사
+	matchCount = 1;
 	int ny = y;
 	while (true)
 	{
@@ -282,16 +314,22 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 	return isMatch;
 }
 
-bool Board::CheckMatchAll()
+void Board::CheckMatchAll()
 {
+	bool isMatch = false;
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < cols; x++)
 		{
-			CheckMatchAt(sf::Vector2i(x, y));
+			if (CheckMatchAt(sf::Vector2i(x, y)))
+				isMatch = true;
 		}
 	}
-	return false;
+
+	if (isMatch)
+		currentState = GameState::Remove;
+	else
+		currentState = GameState::Idle;
 }
 
 void Board::RemoveBlocks()
@@ -302,7 +340,6 @@ void Board::RemoveBlocks()
 		block->PlaySparkle();
 		blockPool.push_back(block);
 	}
-	removeBlocks.clear();
 	isRemoving = true;
 
 	currentState = GameState::Animation;
@@ -311,7 +348,72 @@ void Board::RemoveBlocks()
 
 void Board::DropBlocks()
 {
+	bool isDropCheck = false;
+	for (int y = rows - 1; y >= 1; --y)
+	{
+		for (int x = cols - 1; x >= 0; --x)
+		{
+			if (!blocks[y][x])
+			{
+				if (blocks[y - 1][x])
+				{
+					if (blocks[y - 1][x]->GetCanMove())
+					{
+						blocks[y][x] = blocks[y - 1][x];
+						blocks[y - 1][x] = nullptr;
+						blocks[y][x]->SetMoveDir({ 0.f,1.f });
+					}
+					else if (x != cols - 1 && blocks[y][x + 1] && blocks[y][x + 1]->GetCanMove())
+					{
+						blocks[y][x] = blocks[y][x + 1];
+						blocks[y][x + 1] = nullptr;
+						blocks[y][x]->SetMoveDir({ -1.f,1.f });
+					}
+					else if (x != 0 && blocks[y][x - 1] && blocks[y][x - 1]->GetCanMove())
+					{
+						blocks[y][x] = blocks[y][x - 1];
+						blocks[y][x - 1] = nullptr;
+						blocks[y][x]->SetMoveDir({ 1.f,1.f });
+					}
 
+					blocks[y][x]->SetBoardPos({ x,y });
+					blocks[y][x]->SetIsDropping(true);
+					dropBlocks.push_back(blocks[y][x]);
+					isDropCheck = true;
+				}
+			}
+		}
+	}
+
+	// 맨윗 줄 검사할 때
+	for (int y = 0; y >= 0; --y)
+	{
+		for (int x = cols - 1; x >= 0; --x)
+		{
+			if (!blocks[y][x])
+			{
+				blocks[y][x] = blockPool.back();
+				blockPool.pop_back();
+				blocks[y][x]->Reset();
+				blocks[y][x]->SetCanMove(true);
+				blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2, 6));
+				blocks[y][x]->SetBoardPos({ x,y });
+				blocks[y][x]->SetPosition({ boardLeft + (float)Block::SIZE * x, boardTop - (float)Block::SIZE });
+				blocks[y][x]->SetMoveDir({ 0.f,1.f });
+				blocks[y][x]->SetIsDropping(true);
+				dropBlocks.push_back(blocks[y][x]);
+				isDropCheck = true;
+			}
+		}
+	}
+
+	if (isDropCheck)
+		nextState = GameState::Drop;
+	else
+		nextState = GameState::MatchCheck;
+
+	isDropping = true;
+	currentState = GameState::Animation;
 }
 
 void Board::Init()
@@ -325,6 +427,10 @@ void Board::Init()
 
 			tiles[y][x] = new Tile();
 			tiles[y][x]->Init();
+
+			Block* block = new Block();
+			block->Init();
+			blockPool.push_back(block);
 		}
 	}
 }

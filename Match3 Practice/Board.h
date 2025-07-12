@@ -19,6 +19,7 @@ protected:
 	sf::Vector2i mousePos;
 
 	std::unordered_set<Block*> removeBlocks;
+	std::vector<Block*> dropBlocks;
 	std::vector<Block*> blockPool;
 
 	GameState currentState = GameState::Idle;
@@ -29,6 +30,7 @@ protected:
 
 	bool isSwapping = false;
 	bool isRemoving = false;
+	bool isDropping = false;
 
 	float aniTimer = 0.f;
 
@@ -42,7 +44,7 @@ public:
 	void SwapBlock();
 	void Animation(float dt);
 	bool CheckMatchAt(sf::Vector2i pos);
-	bool CheckMatchAll();
+	void CheckMatchAll();
 	void RemoveBlocks();
 	void DropBlocks();
 

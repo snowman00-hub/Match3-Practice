@@ -46,12 +46,12 @@ enum class BlockTypes
 	None = -1,
 	Jem,
 	Wall,
-	RedJem,
+	RedJem = 2,
 	YellowJem,
 	GreenJem,
 	BlueJem,
 	Diamond,
-	Emerald,
+	Emerald = 7,
 };
 
 enum class TileTypes

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Block.h"
 
-const float Block::moveDuration = 0.15f;
+const float Block::dropDuration = 0.15f;
 const float Block::swapDuration = 0.1f;
 const float Block::removeDuration = 0.4f;
 
@@ -46,14 +46,16 @@ void Block::Release()
 
 void Block::Reset()
 {
+	block.setTexture(TEXTURE_MGR.Get(blockTexId));
+	active = true;
 }
 
 void Block::Update(float dt)
 {
-	if (isMoving)
+	if (isDropping)
 	{
 		sf::Vector2f pos = GetPosition();
-		pos += moveDir * moveSpeed * dt;
+		pos += moveDir * dropSpeed * dt;
 		SetPosition(pos);
 	}
 
