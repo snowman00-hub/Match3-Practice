@@ -256,6 +256,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		for (auto pos : tempPos)
 		{
 			removeBlocks.insert(blocks[pos.y][pos.x]);
+			CheckObstacleNeighbors(pos);
 		}
 		tempPos.clear();
 	}
@@ -308,6 +309,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		for (auto pos : tempPos)
 		{
 			removeBlocks.insert(blocks[pos.y][pos.x]);
+			CheckObstacleNeighbors(pos);
 		}
 	}
 
@@ -330,6 +332,25 @@ void Board::CheckMatchAll()
 		currentState = GameState::Remove;
 	else
 		currentState = GameState::Idle;
+}
+
+void Board::CheckObstacleNeighbors(sf::Vector2i pos)
+{
+	int x = pos.x;
+	int y = pos.y;
+	int dx[4] = { 0,0,-1,1 };
+	int dy[4] = { -1,1,0,0, };
+	for (int i = 0; i < 4; ++i)
+	{
+		int nx = x + dx[i];
+		int ny = y + dy[i];
+
+		if (nx < 0 || nx > cols - 1 || ny < 0 || ny > rows - 1)
+			continue;
+
+		if(blocks[ny][nx] && blocks[ny][nx]->GetBlockType() == BlockTypes::Wall)
+		   removeBlocks.insert(blocks[ny][nx]);
+	}
 }
 
 void Board::RemoveBlocks()
@@ -362,24 +383,31 @@ void Board::DropBlocks()
 						blocks[y][x] = blocks[y - 1][x];
 						blocks[y - 1][x] = nullptr;
 						blocks[y][x]->SetMoveDir({ 0.f,1.f });
+						blocks[y][x]->SetBoardPos({ x,y });
+						blocks[y][x]->SetIsDropping(true);
+						dropBlocks.push_back(blocks[y][x]);
+						isDropCheck = true;
 					}
-					else if (x != cols - 1 && blocks[y][x + 1] && blocks[y][x + 1]->GetCanMove())
+					else if (x != cols - 1 && blocks[y - 1][x + 1] && blocks[y - 1][x + 1]->GetCanMove())
 					{
-						blocks[y][x] = blocks[y][x + 1];
-						blocks[y][x + 1] = nullptr;
+						blocks[y][x] = blocks[y - 1][x + 1];
+						blocks[y - 1][x + 1] = nullptr;
 						blocks[y][x]->SetMoveDir({ -1.f,1.f });
+						blocks[y][x]->SetBoardPos({ x,y });
+						blocks[y][x]->SetIsDropping(true);
+						dropBlocks.push_back(blocks[y][x]);
+						isDropCheck = true;
 					}
-					else if (x != 0 && blocks[y][x - 1] && blocks[y][x - 1]->GetCanMove())
+					else if (x != 0 && blocks[y - 1][x - 1] && blocks[y - 1][x - 1]->GetCanMove())
 					{
-						blocks[y][x] = blocks[y][x - 1];
-						blocks[y][x - 1] = nullptr;
+						blocks[y][x] = blocks[y - 1][x - 1];
+						blocks[y - 1][x - 1] = nullptr;
 						blocks[y][x]->SetMoveDir({ 1.f,1.f });
+						blocks[y][x]->SetBoardPos({ x,y });
+						blocks[y][x]->SetIsDropping(true);
+						dropBlocks.push_back(blocks[y][x]);
+						isDropCheck = true;
 					}
-
-					blocks[y][x]->SetBoardPos({ x,y });
-					blocks[y][x]->SetIsDropping(true);
-					dropBlocks.push_back(blocks[y][x]);
-					isDropCheck = true;
 				}
 			}
 		}

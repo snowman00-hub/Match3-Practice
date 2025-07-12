@@ -45,6 +45,7 @@ public:
 	void Animation(float dt);
 	bool CheckMatchAt(sf::Vector2i pos);
 	void CheckMatchAll();
+	void CheckObstacleNeighbors(sf::Vector2i pos);
 	void RemoveBlocks();
 	void DropBlocks();
 
