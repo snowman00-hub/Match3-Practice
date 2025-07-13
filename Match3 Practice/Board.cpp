@@ -553,6 +553,9 @@ bool Board::CheckMatchPossible()
 					blocks[y][x - 1]->SetBlockType(temp2);
 					return true;
 				}
+
+				blocks[y][x]->SetBlockType(temp1);
+				blocks[y][x - 1]->SetBlockType(temp2);
 			}
 
 			if (y != 0)
@@ -568,6 +571,9 @@ bool Board::CheckMatchPossible()
 					blocks[y - 1][x]->SetBlockType(temp2);
 					return true;
 				}
+
+				blocks[y][x]->SetBlockType(temp1);
+				blocks[y - 1][x]->SetBlockType(temp2);
 			}
 		}
 	}
