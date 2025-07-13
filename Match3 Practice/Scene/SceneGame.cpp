@@ -100,7 +100,7 @@ void SceneGame::Update(float dt)
 	}
 	else if (isDefeat)
 	{
-		std::cout << "Defeated" << std::endl;
+		std::cout << "Defeat" << std::endl;
 	}
 
 	Scene::Update(dt);

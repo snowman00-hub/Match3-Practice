@@ -76,6 +76,8 @@ public:
 	void CheckMatchAll();
 	void CheckObstacleNeighbors(sf::Vector2i pos);
 	void CheckSpecialBlockRemoved();
+	bool CheckMatchPossible();
+	bool CheckMatchAtPossible(sf::Vector2i pos);
 	void RemoveBlocks();
 	void DropBlocks();
 
@@ -87,4 +89,6 @@ public:
 
 	void StageTargetUIUpdate();
 	void RemoveBlocksUpdate();
+	
+	void RelocateBoard();
 };

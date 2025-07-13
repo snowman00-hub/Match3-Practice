@@ -41,6 +41,11 @@ void Board::SetBoardBlock(int* arr)
 			blocks[y][x]->SetPosition({ boardLeft + (float)Block::SIZE * x, boardTop + (float)Block::SIZE * y });
 		}
 	}
+
+	if (!CheckMatchPossible())
+	{
+		RelocateBoard();
+	}
 }
 
 void Board::SetBoardTile(int* arr, int count, int maxCount)
@@ -426,9 +431,17 @@ void Board::CheckMatchAll()
 	}
 
 	if (isMatch)
+	{
 		currentState = GameState::Remove;
+	}
 	else
+	{
 		currentState = GameState::Idle;
+		if (!CheckMatchPossible())
+		{
+			RelocateBoard();
+		}
+	}
 }
 
 void Board::CheckObstacleNeighbors(sf::Vector2i pos)
@@ -519,6 +532,140 @@ void Board::CheckSpecialBlockRemoved()
 	{
 		nextRemoveBlocks.erase(block);
 	}
+}
+
+bool Board::CheckMatchPossible()
+{
+	for (int y = 0; y < rows; y++)
+	{
+		for (int x = 0; x < cols; x++)
+		{
+			if (x != 0)
+			{
+				BlockTypes temp1 = blocks[y][x]->GetBlockType();
+				BlockTypes temp2 = blocks[y][x-1]->GetBlockType();
+				blocks[y][x]->SetBlockType(temp2);
+				blocks[y][x - 1]->SetBlockType(temp1);
+				if(CheckMatchAtPossible(blocks[y][x - 1]->GetBoardPos()) ||
+				   CheckMatchAtPossible(blocks[y][x]->GetBoardPos()))
+				{
+					blocks[y][x]->SetBlockType(temp1);
+					blocks[y][x - 1]->SetBlockType(temp2);
+					return true;
+				}
+			}
+
+			if (y != 0)
+			{
+				BlockTypes temp1 = blocks[y][x]->GetBlockType();
+				BlockTypes temp2 = blocks[y - 1][x]->GetBlockType();
+				blocks[y][x]->SetBlockType(temp2);
+				blocks[y - 1][x]->SetBlockType(temp1);
+				if (CheckMatchAtPossible(blocks[y - 1][x]->GetBoardPos()) ||
+					CheckMatchAtPossible(blocks[y][x]->GetBoardPos()))
+				{
+					blocks[y][x]->SetBlockType(temp1);
+					blocks[y - 1][x]->SetBlockType(temp2);
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool Board::CheckMatchAtPossible(sf::Vector2i pos)
+{
+	int y = pos.y;
+	int x = pos.x;
+	int matchCountH = 1;
+	int matchCountV = 1;
+	BlockTypes type = blocks[y][x]->GetBlockType();
+
+	if (type == BlockTypes::None)
+		return false;
+	if (type == BlockTypes::Wall)
+		return false;
+
+	// 가로 검사
+	int nx = x;
+	while (true)
+	{
+		nx--;
+		if (nx < 0)
+			break;
+
+		if (type == blocks[y][nx]->GetBlockType())
+		{
+			matchCountH++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	nx = x;
+	while (true)
+	{
+		nx++;
+		if (nx >= cols)
+			break;
+
+		if (type == blocks[y][nx]->GetBlockType())
+		{
+			matchCountH++;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	if (matchCountH >= 3)
+	{
+		return true;
+	}
+
+	// 세로 검사
+	int ny = y;
+	while (true)
+	{
+		ny--;
+		if (ny < 0)
+			break;
+
+		if (type == blocks[ny][x]->GetBlockType())
+		{
+			matchCountV++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	ny = y;
+	while (true)
+	{
+		ny++;
+		if (ny >= rows)
+			break;
+
+		if (type == blocks[ny][x]->GetBlockType())
+		{
+			matchCountV++;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	if (matchCountV >= 3)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void Board::RemoveBlocks()
@@ -757,4 +904,9 @@ void Board::RemoveBlocksUpdate()
 		removeBlocks.insert(block);
 	}
 	nextRemoveBlocks.clear();
+}
+
+void Board::RelocateBoard()
+{
+
 }
