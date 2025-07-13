@@ -3,6 +3,7 @@
 #include "SceneGame.h"
 #include "Tile.h"
 #include "Block.h"
+#include "StageUI.h"
 
 void Board::SetBoardBlock(int* arr)
 {
@@ -220,20 +221,9 @@ void Board::Animation(float dt)
 			aniTimer = 0.f;
 			isRemoving = false;
 
-			for (auto block : removeBlocks)
-			{
-				block->SetActive(false);
-				block->SetIsRemoving(false);
-				blockPool.push_back(block);
-				blocks[block->GetBoardPos().y][block->GetBoardPos().x] = nullptr;
-			}
-			removeBlocks.clear();
+			StageTargetUIUpdate();
 
-			for (auto block : nextRemoveBlocks)
-			{
-				removeBlocks.insert(block);
-			}
-			nextRemoveBlocks.clear();
+			RemoveBlocksUpdate();
 
 			currentState = nextState;
 		}
@@ -269,6 +259,8 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 	BlockTypes type = blocks[y][x]->GetBlockType();
 
 	if (type == BlockTypes::None)
+		return false;
+	if (type == BlockTypes::Wall)
 		return false;
 
 	std::vector<sf::Vector2i> tempPos;
@@ -438,8 +430,11 @@ void Board::CheckObstacleNeighbors(sf::Vector2i pos)
 		if (nx < 0 || nx > cols - 1 || ny < 0 || ny > rows - 1)
 			continue;
 
-		if(blocks[ny][nx] && blocks[ny][nx]->GetBlockType() == BlockTypes::Wall)
+		if (blocks[ny][nx] && blocks[ny][nx]->GetBlockType() == BlockTypes::Wall)
+		{
 		   removeBlocks.insert(blocks[ny][nx]);
+		   destroyedWalls.insert(blocks[ny][nx]);
+		}
 	}
 }
 
@@ -458,7 +453,10 @@ void Board::CheckSpecialBlockRemoved()
 					nextRemoveBlocks.insert(blocks[pos.y][i]);
 
 					if (isPainted)
-						tiles[pos.y][i]->SetTileType(TileTypes::Painted);
+						paintTiles.insert(tiles[pos.y][i]);
+
+					if (blocks[pos.y][i]->GetBlockType() == BlockTypes::Wall)
+						destroyedWalls.insert(blocks[pos.y][i]);
 				}
 			}
 			for (int i = 0; i < rows; ++i)
@@ -468,7 +466,10 @@ void Board::CheckSpecialBlockRemoved()
 					nextRemoveBlocks.insert(blocks[i][pos.x]);
 
 					if (isPainted)
-						tiles[i][pos.x]->SetTileType(TileTypes::Painted);
+						paintTiles.insert(tiles[i][pos.x]);
+
+					if (blocks[i][pos.x]->GetBlockType() == BlockTypes::Wall)
+						destroyedWalls.insert(blocks[i][pos.x]);
 				}
 			}
 		}
@@ -489,7 +490,10 @@ void Board::CheckSpecialBlockRemoved()
 						nextRemoveBlocks.insert(blocks[y][x]);
 
 						if (isPainted)
-							tiles[y][x]->SetTileType(TileTypes::Painted);
+							paintTiles.insert(tiles[y][x]);
+
+						if (blocks[y][x]->GetBlockType() == BlockTypes::Wall)
+							destroyedWalls.insert(blocks[y][x]);
 					}
 				}
 			}
@@ -708,4 +712,34 @@ void Board::Draw(sf::RenderWindow& window)
 			blocks[y][x]->Draw(window);
 		}
 	}
+}
+
+void Board::StageTargetUIUpdate()
+{
+	for (auto wall : destroyedWalls)
+	{
+		scene->remainWallCount--;
+	}
+	destroyedWalls.clear();
+
+	scene->remainTileCount = maxPaintableCount - paintedCount;
+	((StageUI*)scene->FindGameObject("UI"))->UpdateTarget();
+}
+
+void Board::RemoveBlocksUpdate()
+{
+	for (auto block : removeBlocks)
+	{
+		block->SetActive(false);
+		block->SetIsRemoving(false);
+		blockPool.push_back(block);
+		blocks[block->GetBoardPos().y][block->GetBoardPos().x] = nullptr;
+	}
+	removeBlocks.clear();
+
+	for (auto block : nextRemoveBlocks)
+	{
+		removeBlocks.insert(block);
+	}
+	nextRemoveBlocks.clear();
 }

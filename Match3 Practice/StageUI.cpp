@@ -80,13 +80,16 @@ void StageUI::SetSwapCount(int count)
 	Utils::SetOrigin(swapCount, Origins::TC);
 }
 
-void StageUI::SetTarget(sf::Sprite* sprite, int count)
+void StageUI::SetTarget(sf::Sprite* sprite, int* count)
 {
+	if (*count == 0)
+		return;
+
 	sf::Text countText;
 	countText.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
 	countText.setCharacterSize(20.f);
 	countText.setFillColor(sf::Color::Black);
-	countText.setString(std::to_string(count));
+	countText.setString(std::to_string(*count));
 	Utils::SetOrigin(countText, Origins::TC);
 
 	sprite->setScale({ 0.75f,0.75f });
@@ -110,15 +113,11 @@ void StageUI::SetTarget(sf::Sprite* sprite, int count)
 	}
 }
 
-void StageUI::UpdateTarget(sf::Sprite* sprite, int count)
+void StageUI::UpdateTarget()
 {
 	for (auto& target : targets)
 	{
-		if (target.sprite == sprite)
-		{
-			target.count = count;
-			target.countText.setString(std::to_string(count));
-			Utils::SetOrigin(target.countText, Origins::TC);
-		}
+		target.countText.setString(std::to_string(*target.count));
+		Utils::SetOrigin(target.countText, Origins::TC);
 	}
 }

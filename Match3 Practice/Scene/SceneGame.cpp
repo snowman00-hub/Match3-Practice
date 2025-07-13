@@ -3,6 +3,8 @@
 #include "Animator.h"
 #include "Board.h"
 #include "StageUI.h"
+#include "Tile.h"
+#include "Block.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -14,6 +16,13 @@ void SceneGame::Init()
 	background.setTexture(TEXTURE_MGR.Get("graphics/bg_sky.png"));
 
 	ui = (StageUI*)AddGameObject(new StageUI("UI"));
+	ui->SetStageLevel(stageLevel);
+	ui->SetSwapCount(swapCount);
+	redTile.setTexture(TEXTURE_MGR.Get("graphics/tiles.png"));
+	redTile.setTextureRect(sf::IntRect(Tile::SIZE, 0, Tile::SIZE, Tile::SIZE));
+	wall.setTexture(TEXTURE_MGR.Get("graphics/blocks.png"));
+	wall.setTextureRect(sf::IntRect(0, 0, Block::SIZE, Block::SIZE));
+
 	board = (Board*)AddGameObject(new Board());
 	// -1 ºó °ø°£
 	//  0 º¸¼®
@@ -23,11 +32,11 @@ void SceneGame::Init()
 		0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
+		0,0,0,1,0,0,0,0,0,
+		0,0,0,1,0,0,0,0,0,
+		0,0,0,1,0,0,0,0,0,
+		0,0,0,1,0,0,0,0,0,
+		0,0,0,1,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0
 	};
 	
@@ -51,6 +60,11 @@ void SceneGame::Init()
 	board->SetInitialTileState(initialTileState, 5, 81);
 
 	Scene::Init();
+
+	remainTileCount = 76;
+	remainWallCount = 5;
+	ui->SetTarget(&redTile, &remainTileCount);
+	ui->SetTarget(&wall, &remainWallCount);
 }
 
 void SceneGame::Enter()

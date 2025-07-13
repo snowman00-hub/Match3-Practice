@@ -5,7 +5,7 @@ struct Target
 {
 	sf::Sprite* sprite;
 	sf::Text countText;
-	int count;
+	int* count;
 };
 
 class StageUI : public GameObject
@@ -36,6 +36,6 @@ public:
 
 	void SetStageLevel(int level);
 	void SetSwapCount(int count);
-	void SetTarget(sf::Sprite* sprite, int count);
-	void UpdateTarget(sf::Sprite * sprite, int count);
+	void SetTarget(sf::Sprite* sprite, int* count);
+	void UpdateTarget();
 };

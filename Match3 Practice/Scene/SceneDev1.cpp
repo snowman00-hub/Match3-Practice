@@ -23,8 +23,11 @@ void SceneDev1::Init()
 
 	Scene::Init();
 
-	ui->SetTarget(&redTile, 20);
-	ui->SetTarget(&wall, 10);
+	redTileCount = 20;
+	wallCount = 10;
+
+	ui->SetTarget(&redTile, &redTileCount);
+	ui->SetTarget(&wall, &wallCount);
 }
 
 void SceneDev1::Enter()

@@ -13,7 +13,16 @@ protected:
 	sf::Sprite background;
 	sf::Sprite cursor;
 
+	int stageLevel = 1;
+	int swapCount = 20;
+
+	sf::Sprite redTile;
+	sf::Sprite wall;
+
 public:
+	int remainTileCount;
+	int remainWallCount;
+
 	SceneGame();
 	~SceneGame() override = default;
 

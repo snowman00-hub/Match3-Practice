@@ -12,6 +12,9 @@ protected:
 	sf::Sprite redTile;
 	sf::Sprite wall;
 
+	int redTileCount;
+	int wallCount;
+
 public:
 	SceneDev1();
 

@@ -25,7 +25,10 @@ protected:
 
 	std::unordered_set<Block*> removeBlocks;
 	std::unordered_set<Block*> nextRemoveBlocks;
+
+	std::unordered_set<Block*> destroyedWalls;
 	std::unordered_set<Tile*> paintTiles;
+
 	std::vector<Block*> dropBlocks;
 	std::vector<Block*> blockPool;
 
@@ -81,4 +84,7 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void StageTargetUIUpdate();
+	void RemoveBlocksUpdate();
 };
