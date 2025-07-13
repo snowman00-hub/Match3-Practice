@@ -71,6 +71,17 @@ void Board::SetBoardTile(int* arr, int count, int maxCount)
 
 void Board::Idle()
 {
+	if (scene->remainTileCount == 0 && scene->remainWallCount == 0)
+	{
+		scene->isClear = true;
+		return;
+	}
+	else if (scene->swapCount == 0)
+	{
+		scene->isDefeat = true;
+		return;
+	}
+
 	mousePos = InputMgr::GetMousePosition();
 
 	if (mousePos.x >= boardLeft && mousePos.x < boardLeft + Block::SIZE * cols

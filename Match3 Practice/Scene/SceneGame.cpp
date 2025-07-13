@@ -94,6 +94,15 @@ void SceneGame::Update(float dt)
 {
 	cursor.setPosition(ScreenToUi(InputMgr::GetMousePosition()));
 
+	if (isClear)
+	{
+		std::cout << "Clear" << std::endl;
+	}
+	else if (isDefeat)
+	{
+		std::cout << "Defeated" << std::endl;
+	}
+
 	Scene::Update(dt);
 }
 

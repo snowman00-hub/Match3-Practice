@@ -19,6 +19,9 @@ protected:
 	sf::Sprite wall;
 
 public:
+	bool isClear = false;
+	bool isDefeat = false;
+
 	int swapCount = 20;
 	int remainTileCount;
 	int remainWallCount;
@@ -31,4 +34,7 @@ public:
 	void Exit() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void StageClear();
+	void StageDefeat();
 };

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "StageUI.h"
+#include "SceneGame.h"
 
 StageUI::StageUI(const std::string& name)
 	: GameObject(name)
