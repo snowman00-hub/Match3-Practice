@@ -7,16 +7,24 @@
 void Board::SetBoardBlock(int* arr)
 {
 	BlockTypes blockType;
+	BlockTypes temp;
 
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < cols; x++)
 		{
 			blockType = (BlockTypes)arr[9 * y + x];
-
+			
 			if (blockType == BlockTypes::Jem)
 			{
-				blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2,6));
+				do
+				{
+					blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2,6));
+					temp = blocks[y][x]->GetBlockType();
+				} while (
+					(x >= 2 && blocks[y][x - 2]->GetBlockType() == temp && blocks[y][x - 1]->GetBlockType() == temp) ||
+					(y >= 2 && blocks[y - 2][x]->GetBlockType() == temp && blocks[y - 1][x]->GetBlockType() == temp)
+					);
 			}
 			else 
 			{				
@@ -119,16 +127,36 @@ void Board::Idle()
 
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
 	{
+		if (selectedBlock && (selectedBlock->GetBlockType() == BlockTypes::Diamond ||
+			selectedBlock->GetBlockType() == BlockTypes::Emerald))
+		{
+			removeBlocks.insert(selectedBlock);
+			currentState = GameState::Remove;
+		}
+
 		selectedBlock = nullptr;
 	}
 }
 
 void Board::SwapBlock()
 {
+	bool isSpecialBlock = false;
+	if (selectedBlock->GetBlockType() == BlockTypes::Diamond || selectedBlock->GetBlockType() == BlockTypes::Emerald)
+	{
+		removeBlocks.insert(selectedBlock);
+		isSpecialBlock = true;
+	}
+
+	if (targetBlock->GetBlockType() == BlockTypes::Diamond || targetBlock->GetBlockType() == BlockTypes::Emerald)
+	{
+		removeBlocks.insert(targetBlock);
+		isSpecialBlock = true;
+	}
+
 	bool isMatchS = CheckMatchAt(selectedBlock->GetBoardPos());
 	bool isMatchT = CheckMatchAt(targetBlock->GetBoardPos());
 
-	if (isMatchS || isMatchT)
+	if (isMatchS || isMatchT || isSpecialBlock)
 	{
 		isSwapping = false;
 		selectedBlock = nullptr;
@@ -625,6 +653,9 @@ void Board::Reset()
 			tiles[y][x]->Reset();
 		}
 	}
+
+	SetBoardBlock(initialBlockState);
+	SetBoardTile(initialTileState, initialPaintedCount, initialMaxPaintableCount);
 }
 
 void Board::Update(float dt)

@@ -14,7 +14,7 @@ void SceneGame::Init()
 	// -1 빈 공간
 	//  0 보석
 	//  1 장애물
-	int initialBlockState[81] = 
+	static int initialBlockState[81] = 
 	{
 		0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,
@@ -30,7 +30,7 @@ void SceneGame::Init()
 	// -1 빈 공간
 	//  0 디폴트
 	//  1 페인트된
-	int initialTileState[81] =
+	static int initialTileState[81] =
 	{
 		0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,
@@ -43,10 +43,10 @@ void SceneGame::Init()
 		0,0,0,0,0,0,0,0,0
 	};
 
-	Scene::Init();
+	board->SetInitialBlockState(initialBlockState);
+	board->SetInitialTileState(initialTileState, 5, 81);
 
-	board->SetBoardBlock(initialBlockState);
-	board->SetBoardTile(initialTileState,5,81);
+	Scene::Init();
 }
 
 void SceneGame::Enter()
