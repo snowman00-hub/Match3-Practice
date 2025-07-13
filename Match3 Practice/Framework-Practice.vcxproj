@@ -148,6 +148,7 @@
     <ClCompile Include="Scene\SceneDev2.cpp" />
     <ClCompile Include="Scene\SceneGame.cpp" />
     <ClCompile Include="Framework\SoundMgr.cpp" />
+    <ClCompile Include="StageUI.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -174,6 +175,7 @@
     <ClInclude Include="Scene\SceneDev2.h" />
     <ClInclude Include="Scene\SceneGame.h" />
     <ClInclude Include="Framework\SoundMgr.h" />
+    <ClInclude Include="StageUI.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Framework\TextGo.h" />
     <ClInclude Include="Framework\Utils.h" />

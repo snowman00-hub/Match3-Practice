@@ -2,12 +2,15 @@
 #include "Scene.h"
 
 class Board;
+class StageUI;
 
 class SceneGame : public Scene
 {
 protected:
 	Board* board;
+	StageUI* ui;
 
+	sf::Sprite background;
 	sf::Sprite cursor;
 
 public:

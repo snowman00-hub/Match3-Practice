@@ -12,6 +12,10 @@ void Framework::Init(int w, int h, const std::string& t)
     texIds.push_back("graphics/tiles.png");
     texIds.push_back("graphics/sparkles.png");
     texIds.push_back("graphics/bg_sky.png");
+    texIds.push_back("graphics/backgroundPanel.png");
+    texIds.push_back("graphics/swapCountPanel.png"); 
+    texIds.push_back("graphics/targetCountPanel.png");
+    texIds.push_back("graphics/stageLevelPanel.png");
 
     fontIds.push_back("fonts/Maplestory Light.ttf");
 

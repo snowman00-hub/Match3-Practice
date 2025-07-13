@@ -2,6 +2,7 @@
 #include "SceneGame.h"
 #include "Animator.h"
 #include "Board.h"
+#include "StageUI.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -10,6 +11,9 @@ SceneGame::SceneGame()
 
 void SceneGame::Init()
 {
+	background.setTexture(TEXTURE_MGR.Get("graphics/bg_sky.png"));
+
+	ui = (StageUI*)AddGameObject(new StageUI("UI"));
 	board = (Board*)AddGameObject(new Board());
 	// -1 ºó °ø°£
 	//  0 º¸¼®
@@ -80,6 +84,7 @@ void SceneGame::Update(float dt)
 
 void SceneGame::Draw(sf::RenderWindow& window)
 {
+	window.draw(background);
 	Scene::Draw(window);
 	window.setView(uiView);
 	window.draw(cursor);

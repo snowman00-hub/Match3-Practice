@@ -33,7 +33,7 @@ protected:
 	GameState nextState = GameState::Idle;
 
 	const float boardLeft = 90.f;
-	const float boardTop = 150.f;
+	const float boardTop = 210.f;
 
 	bool isSwapping = false;
 	bool isRemoving = false;

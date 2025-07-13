@@ -2,16 +2,17 @@
 #include "Scene.h"
 
 class TextGo;
+class StageUI;
 
 class SceneDev1 : public Scene
 {
 protected:
-	TextGo* testGo;
+	StageUI* ui;
 
 public:
 	SceneDev1();
 
 	void Init() override;
-	void Update(float dt) override;
+	void Enter() override;
 };
 

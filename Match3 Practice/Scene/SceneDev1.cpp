@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneDev1.h"
 #include "TextGo.h"
+#include "StageUI.h"
 
 SceneDev1::SceneDev1()
 	: Scene(SceneIds::Dev1)
@@ -9,45 +10,20 @@ SceneDev1::SceneDev1()
 
 void SceneDev1::Init()
 {
-	fontIds.push_back("fonts/DS-DIGIT.ttf");
-
-	TextGo* go = new TextGo("fonts/DS-DIGIT.ttf");
-	go->SetString("Dev 1");
-	go->SetCharacterSize(30);
-	go->SetFillColor(sf::Color::White);
-	AddGameObject(go);
-
-	testGo = new TextGo("fonts/DS-DIGIT.ttf");
-	testGo->SetString("Dev 1");
-	testGo->SetCharacterSize(30);
-	testGo->SetFillColor(sf::Color::Red);
-	AddGameObject(testGo);
+	ui = (StageUI*)AddGameObject(new StageUI("UI"));
+	ui->SetStageLevel(1);
+	ui->SetSwapCount(20);
 
 	Scene::Init();
 }
 
-void SceneDev1::Update(float dt)
+void SceneDev1::Enter()
 {
-	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
-	{
-		SCENE_MGR.ChangeScene(SceneIds::Dev2);
-	}
+	sf::Vector2f windowSize = FRAMEWORK.GetWindowSizeF();
+	worldView.setSize(windowSize);
+	worldView.setCenter(windowSize * 0.5f);
+	uiView.setSize(windowSize);
+	uiView.setCenter(windowSize * 0.5f);
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
-	{
-		testGo->sortingOrder = -1;
-	}
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
-	{
-		testGo->sortingOrder = 1;
-	}
-
-	sf::Vector2f dir;
-	dir.x = InputMgr::GetAxis(Axis::Horizontal);
-	dir.y = InputMgr::GetAxis(Axis::Vertical);
-
-	sf::Vector2f pos = testGo->GetPosition();
-	pos += dir * 100.f * dt;
-	testGo->SetPosition(pos);
+	Scene::Enter();
 }
