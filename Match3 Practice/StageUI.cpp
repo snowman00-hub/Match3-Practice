@@ -54,6 +54,11 @@ void StageUI::Draw(sf::RenderWindow& window)
 	window.draw(targetCountPanel);
 	window.draw(stageLevelPanel);
 	window.draw(stageLevel);
+	for (auto& target : targets)
+	{
+		window.draw(*target.sprite);
+		window.draw(target.countText);
+	}
 }
 
 void StageUI::SetStageLevel(int level)
@@ -73,4 +78,47 @@ void StageUI::SetSwapCount(int count)
 		swapCount.setString("0" + std::to_string(count));
 	}
 	Utils::SetOrigin(swapCount, Origins::TC);
+}
+
+void StageUI::SetTarget(sf::Sprite* sprite, int count)
+{
+	sf::Text countText;
+	countText.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
+	countText.setCharacterSize(20.f);
+	countText.setFillColor(sf::Color::Black);
+	countText.setString(std::to_string(count));
+	Utils::SetOrigin(countText, Origins::TC);
+
+	sprite->setScale({ 0.75f,0.75f });
+	targets.push_back({ sprite, countText,count });
+	
+	int size = targets.size();
+	switch (size)
+	{
+		case 1:
+			targets[0].sprite->setPosition(stageLevelPanel.getPosition() + sf::Vector2f(50.f, 45.f));
+			targets[0].countText.setPosition(stageLevelPanel.getPosition() + sf::Vector2f(72.5f, 87.f));
+			break;
+		case 2:
+			targets[0].sprite->setPosition(stageLevelPanel.getPosition() + sf::Vector2f(0.f, 45.f));
+			targets[0].countText.setPosition(stageLevelPanel.getPosition() + sf::Vector2f(22.5f, 87.f));
+			targets[1].sprite->setPosition(stageLevelPanel.getPosition() + sf::Vector2f(100.f, 45.f));
+			targets[1].countText.setPosition(stageLevelPanel.getPosition() + sf::Vector2f(122.5f, 87.f));
+			break;
+		case 3:
+			break;
+	}
+}
+
+void StageUI::UpdateTarget(sf::Sprite* sprite, int count)
+{
+	for (auto& target : targets)
+	{
+		if (target.sprite == sprite)
+		{
+			target.count = count;
+			target.countText.setString(std::to_string(count));
+			Utils::SetOrigin(target.countText, Origins::TC);
+		}
+	}
 }

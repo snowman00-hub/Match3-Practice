@@ -2,6 +2,8 @@
 #include "SceneDev1.h"
 #include "TextGo.h"
 #include "StageUI.h"
+#include "Tile.h"
+#include "Block.h"
 
 SceneDev1::SceneDev1()
 	: Scene(SceneIds::Dev1)
@@ -14,7 +16,15 @@ void SceneDev1::Init()
 	ui->SetStageLevel(1);
 	ui->SetSwapCount(20);
 
+	redTile.setTexture(TEXTURE_MGR.Get("graphics/tiles.png"));
+	redTile.setTextureRect(sf::IntRect(Tile::SIZE, 0, Tile::SIZE, Tile::SIZE));
+	wall.setTexture(TEXTURE_MGR.Get("graphics/blocks.png"));
+	wall.setTextureRect(sf::IntRect(0, 0, Block::SIZE, Block::SIZE));
+
 	Scene::Init();
+
+	ui->SetTarget(&redTile, 20);
+	ui->SetTarget(&wall, 10);
 }
 
 void SceneDev1::Enter()

@@ -9,6 +9,9 @@ class SceneDev1 : public Scene
 protected:
 	StageUI* ui;
 
+	sf::Sprite redTile;
+	sf::Sprite wall;
+
 public:
 	SceneDev1();
 

@@ -1,6 +1,13 @@
 #pragma once
 #include "GameObject.h"
 
+struct Target
+{
+	sf::Sprite* sprite;
+	sf::Text countText;
+	int count;
+};
+
 class StageUI : public GameObject
 {
 protected:
@@ -12,7 +19,7 @@ protected:
 	sf::Text swapCount;
 	sf::Text stageLevel;
 
-	std::unordered_map<std::string, int> targets;
+	std::vector<Target> targets;
 
 	const float startX = 50.f;
 	const float startY = 10.f;
@@ -27,7 +34,8 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void SetTarget(const std::string& texId, int count) { targets[texId] = count; }
 	void SetStageLevel(int level);
 	void SetSwapCount(int count);
+	void SetTarget(sf::Sprite* sprite, int count);
+	void UpdateTarget(sf::Sprite * sprite, int count);
 };
