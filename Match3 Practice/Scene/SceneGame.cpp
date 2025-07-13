@@ -17,7 +17,8 @@ void SceneGame::Init()
 
 	ui = (StageUI*)AddGameObject(new StageUI("UI"));
 	ui->SetStageLevel(stageLevel);
-	ui->SetSwapCount(swapCount);
+	ui->SetSwapCount(&swapCount);
+	ui->UpdateSwapCount();
 	redTile.setTexture(TEXTURE_MGR.Get("graphics/tiles.png"));
 	redTile.setTextureRect(sf::IntRect(Tile::SIZE, 0, Tile::SIZE, Tile::SIZE));
 	wall.setTexture(TEXTURE_MGR.Get("graphics/blocks.png"));

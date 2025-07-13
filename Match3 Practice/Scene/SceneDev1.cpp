@@ -14,7 +14,6 @@ void SceneDev1::Init()
 {
 	ui = (StageUI*)AddGameObject(new StageUI("UI"));
 	ui->SetStageLevel(1);
-	ui->SetSwapCount(20);
 
 	redTile.setTexture(TEXTURE_MGR.Get("graphics/tiles.png"));
 	redTile.setTextureRect(sf::IntRect(Tile::SIZE, 0, Tile::SIZE, Tile::SIZE));

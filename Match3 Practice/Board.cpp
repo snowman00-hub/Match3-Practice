@@ -124,6 +124,8 @@ void Board::Idle()
 
 		currentState = GameState::Animation;
 		nextState = GameState::Swap;
+		scene->swapCount--;
+		((StageUI*)scene->FindGameObject("UI"))->UpdateSwapCount();
 	}
 
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
@@ -133,6 +135,8 @@ void Board::Idle()
 		{
 			removeBlocks.insert(selectedBlock);
 			currentState = GameState::Remove;
+			scene->swapCount--;
+			((StageUI*)scene->FindGameObject("UI"))->UpdateSwapCount();
 		}
 
 		selectedBlock = nullptr;

@@ -15,7 +15,7 @@ void StageUI::Init()
 	targetCountPanel.setTexture(TEXTURE_MGR.Get("graphics/targetCountPanel.png"));
 	stageLevelPanel.setTexture(TEXTURE_MGR.Get("graphics/stageLevelPanel.png"));
 
-	swapCount.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
+	swapCountText.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
 	stageLevel.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf")); 
 
 	backgroundPanel.setPosition({ startX,startY });
@@ -28,10 +28,10 @@ void StageUI::Init()
 	Utils::SetOrigin(stageLevel, Origins::TC);
 	stageLevel.setPosition(stageLevelPanel.getPosition() + sf::Vector2f(75.f, 5.f));
 
-	swapCount.setCharacterSize(60.f);
-	swapCount.setFillColor(sf::Color::Black);
-	Utils::SetOrigin(swapCount, Origins::TC);
-	swapCount.setPosition(swapCountPanel.getPosition() + sf::Vector2f(50.f, 10.f));
+	swapCountText.setCharacterSize(60.f);
+	swapCountText.setFillColor(sf::Color::Black);
+	Utils::SetOrigin(swapCountText, Origins::TC);
+	swapCountText.setPosition(swapCountPanel.getPosition() + sf::Vector2f(50.f, 10.f));
 }
 
 void StageUI::Release()
@@ -50,7 +50,7 @@ void StageUI::Draw(sf::RenderWindow& window)
 {
 	window.draw(backgroundPanel);
 	window.draw(swapCountPanel);
-	window.draw(swapCount);
+	window.draw(swapCountText);
 	window.draw(targetCountPanel);
 	window.draw(stageLevelPanel);
 	window.draw(stageLevel);
@@ -65,19 +65,6 @@ void StageUI::SetStageLevel(int level)
 {
 	stageLevel.setString("Stage " + std::to_string(level));
 	Utils::SetOrigin(stageLevel, Origins::TC);
-}
-
-void StageUI::SetSwapCount(int count)
-{
-	if (count >= 10)
-	{
-		swapCount.setString(std::to_string(count));
-	}
-	else
-	{
-		swapCount.setString("0" + std::to_string(count));
-	}
-	Utils::SetOrigin(swapCount, Origins::TC);
 }
 
 void StageUI::SetTarget(sf::Sprite* sprite, int* count)
@@ -120,4 +107,17 @@ void StageUI::UpdateTarget()
 		target.countText.setString(std::to_string(*target.count));
 		Utils::SetOrigin(target.countText, Origins::TC);
 	}
+}
+
+void StageUI::UpdateSwapCount()
+{
+	if (*swapCount >= 10)
+	{
+		swapCountText.setString(std::to_string(*swapCount));
+	}
+	else
+	{
+		swapCountText.setString("0" + std::to_string(*swapCount));
+	}
+	Utils::SetOrigin(swapCountText, Origins::TC);
 }

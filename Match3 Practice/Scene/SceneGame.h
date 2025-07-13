@@ -14,12 +14,12 @@ protected:
 	sf::Sprite cursor;
 
 	int stageLevel = 1;
-	int swapCount = 20;
 
 	sf::Sprite redTile;
 	sf::Sprite wall;
 
 public:
+	int swapCount = 20;
 	int remainTileCount;
 	int remainWallCount;
 

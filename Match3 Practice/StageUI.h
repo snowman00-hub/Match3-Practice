@@ -16,10 +16,12 @@ protected:
 	sf::Sprite targetCountPanel;
 	sf::Sprite stageLevelPanel;
 
-	sf::Text swapCount;
+	sf::Text swapCountText;
 	sf::Text stageLevel;
 
 	std::vector<Target> targets;
+
+	int* swapCount;
 
 	const float startX = 50.f;
 	const float startY = 10.f;
@@ -35,7 +37,8 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void SetStageLevel(int level);
-	void SetSwapCount(int count);
+	void SetSwapCount(int* count) { swapCount = count; }
 	void SetTarget(sf::Sprite* sprite, int* count);
 	void UpdateTarget();
+	void UpdateSwapCount();
 };
