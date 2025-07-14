@@ -3,6 +3,9 @@
 class SceneStart : public Scene
 {
 protected:
+	sf::Sprite background;
+	sf::Sprite cursor;
+	sf::Text startMessage;
 
 public:
 	SceneStart();
@@ -12,5 +15,6 @@ public:
 	void Enter() override;
 
 	void Update(float dt) override;
+	void Draw(sf::RenderWindow& window) override;
 };
 
