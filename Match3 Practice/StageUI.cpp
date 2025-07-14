@@ -70,9 +70,6 @@ void StageUI::SetStageLevel(int level)
 
 void StageUI::SetTarget(sf::Sprite* sprite, int* count)
 {
-	if (*count == 0)
-		return;
-
 	sf::Text countText;
 	countText.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
 	countText.setCharacterSize(20.f);

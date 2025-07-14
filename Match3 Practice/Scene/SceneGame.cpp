@@ -24,6 +24,13 @@ void SceneGame::Init()
 	wall.setTexture(TEXTURE_MGR.Get("graphics/blocks.png"));
 	wall.setTextureRect(sf::IntRect(0, 0, Block::SIZE, Block::SIZE));
 
+	relocateMessage.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
+	relocateMessage.setCharacterSize(80);
+	relocateMessage.setFillColor(sf::Color::Yellow);
+	relocateMessage.setString(L"재배치!");
+	Utils::SetOrigin(relocateMessage, Origins::MC);
+	relocateMessage.setPosition({ 600.f,150.f });
+
 	board = (Board*)AddGameObject(new Board());
 	// -1 빈 공간
 	//  0 보석
@@ -34,10 +41,10 @@ void SceneGame::Init()
 		0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,
 		0,0,0,1,0,0,0,0,0,
+		0,0,1,0,1,0,0,0,0,
 		0,0,0,1,0,0,0,0,0,
-		0,0,0,1,0,0,0,0,0,
-		0,0,0,1,0,0,0,0,0,
-		0,0,0,1,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0
 	};
 	
@@ -58,12 +65,10 @@ void SceneGame::Init()
 	};
 
 	board->SetInitialBlockState(initialBlockState);
-	board->SetInitialTileState(initialTileState, 5, 81);
+	board->SetInitialTileState(initialTileState);
 
 	Scene::Init();
 
-	remainTileCount = 76;
-	remainWallCount = 5;
 	ui->SetTarget(&redTile, &remainTileCount);
 	ui->SetTarget(&wall, &remainWallCount);
 }
@@ -78,6 +83,8 @@ void SceneGame::Enter()
 	uiView.setCenter(windowSize * 0.5f);
 
 	Scene::Enter();
+
+	ui->UpdateTarget();
 
 	cursor.setTexture(TEXTURE_MGR.Get("graphics/cursor.png"));
 	Utils::SetOrigin(cursor, Origins::TL);
@@ -103,6 +110,15 @@ void SceneGame::Update(float dt)
 		std::cout << "Defeat" << std::endl;
 	}
 
+	if (isRelocate)
+	{
+		relocateTimer += dt;
+		if (relocateTimer > relocateTime)
+		{
+			isRelocate = false;
+			relocateTimer = 0.f;
+		}
+	}
 	Scene::Update(dt);
 }
 
@@ -112,4 +128,6 @@ void SceneGame::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 	window.setView(uiView);
 	window.draw(cursor);
+	if (isRelocate)
+		window.draw(relocateMessage);
 }

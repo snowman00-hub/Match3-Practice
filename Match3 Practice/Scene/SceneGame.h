@@ -12,19 +12,23 @@ protected:
 
 	sf::Sprite background;
 	sf::Sprite cursor;
+	sf::Sprite redTile;
+	sf::Sprite wall;
 
 	int stageLevel = 1;
 
-	sf::Sprite redTile;
-	sf::Sprite wall;
+	sf::Text relocateMessage;
+	float relocateTimer = 0.f;
+	const float relocateTime = 3.0f;
 
 public:
 	bool isClear = false;
 	bool isDefeat = false;
+	bool isRelocate = false;
 
 	int swapCount = 20;
-	int remainTileCount;
-	int remainWallCount;
+	int remainTileCount = 0;
+	int remainWallCount = 0;
 
 	SceneGame();
 	~SceneGame() override = default;

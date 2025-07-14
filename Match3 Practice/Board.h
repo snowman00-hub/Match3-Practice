@@ -44,11 +44,8 @@ protected:
 
 	float aniTimer = 0.f;
 
-	int paintedCount;
-	int maxPaintableCount;
-
-	int initialPaintedCount;
-	int initialMaxPaintableCount;
+	int paintedCount = 0;
+	int maxPaintableCount = 0;
 
 	int* initialBlockState;
 	int* initialTileState;
@@ -58,14 +55,9 @@ public:
 	~Board() override = default;
 
 	void SetInitialBlockState(int* arr) { initialBlockState = arr; }
-	void SetInitialTileState(int* arr, int count, int maxCount) 
-	{ 
-		initialTileState = arr; 
-		initialPaintedCount = count;
-		initialMaxPaintableCount = maxCount;
-	}
+	void SetInitialTileState(int* arr) { initialTileState = arr; }
 	void SetBoardBlock(int* arr);
-	void SetBoardTile(int* arr, int count, int maxCount);
+	void SetBoardTile(int* arr);
 
 	int GetRemainPaintableCount() { return maxPaintableCount - paintedCount; }
 

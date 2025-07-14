@@ -15,6 +15,7 @@ void Board::SetBoardBlock(int* arr)
 		for (int x = 0; x < cols; x++)
 		{
 			blockType = (BlockTypes)arr[9 * y + x];
+			maxPaintableCount++;
 			
 			if (blockType == BlockTypes::Jem)
 			{
@@ -35,6 +36,11 @@ void Board::SetBoardBlock(int* arr)
 				if (blockType == BlockTypes::None)
 				{
 					blocks[y][x]->SetActive(false);
+					maxPaintableCount--;
+				}
+				else if (blockType == BlockTypes::Wall)
+				{
+					scene->remainWallCount++;
 				}
 			}
 			blocks[y][x]->SetBoardPos({ x,y });
@@ -48,10 +54,8 @@ void Board::SetBoardBlock(int* arr)
 	}
 }
 
-void Board::SetBoardTile(int* arr, int count, int maxCount)
+void Board::SetBoardTile(int* arr)
 {
-	paintedCount = count;
-	maxPaintableCount = maxCount;
 	TileTypes tileType;
 	for (int y = 0; y < rows; y++)
 	{
@@ -59,7 +63,7 @@ void Board::SetBoardTile(int* arr, int count, int maxCount)
 		{
 			tileType = (TileTypes)arr[9 * y + x];
 
-			if (tileType == TileTypes::None)
+			if (tileType == TileTypes::None || blocks[y][x]->GetBlockType() == BlockTypes::None)
 			{
 				tiles[y][x]->SetActive(false);
 				tiles[y][x]->SetTileType(TileTypes::None);
@@ -67,11 +71,15 @@ void Board::SetBoardTile(int* arr, int count, int maxCount)
 			else
 			{
 				tiles[y][x]->SetTileType(tileType);
+				if (tileType == TileTypes::Painted)
+					paintedCount++;
 			}
 			tiles[y][x]->SetBoardPos({ x,y });
 			tiles[y][x]->SetPosition({ boardLeft + (float)Tile::SIZE * x, boardTop + (float)Tile::SIZE * y });
 		}
 	}
+
+	scene->remainTileCount = maxPaintableCount - paintedCount;
 }
 
 void Board::Idle()
@@ -85,6 +93,11 @@ void Board::Idle()
 	{
 		scene->isDefeat = true;
 		return;
+	}
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
+	{
+		SCENE_MGR.ChangeScene(scene->Id);
 	}
 
 	mousePos = InputMgr::GetMousePosition();
@@ -276,6 +289,10 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 	int matchCountH = 1;
 	int matchCountV = 1;
 	bool isMatch = false;
+
+	if (!blocks[y][x])
+		return false;
+
 	BlockTypes type = blocks[y][x]->GetBlockType();
 
 	if (type == BlockTypes::None)
@@ -294,7 +311,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		if (nx < 0)
 			break;
 
-		if (type == blocks[y][nx]->GetBlockType())
+		if (blocks[y][nx] && type == blocks[y][nx]->GetBlockType())
 		{
 			tempPos.push_back(sf::Vector2i(nx, y));
 			matchCountH++;
@@ -311,7 +328,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		if (nx >= cols)
 			break;
 
-		if (type == blocks[y][nx]->GetBlockType())
+		if (blocks[y][nx] && type == blocks[y][nx]->GetBlockType())
 		{
 			tempPos.push_back(sf::Vector2i(nx, y));
 			matchCountH++;
@@ -357,7 +374,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		if (ny < 0)
 			break;
 
-		if (type == blocks[ny][x]->GetBlockType())
+		if (blocks[ny][x] && type == blocks[ny][x]->GetBlockType())
 		{
 			tempPos.push_back(sf::Vector2i(x, ny));
 			matchCountV++;
@@ -374,7 +391,7 @@ bool Board::CheckMatchAt(sf::Vector2i pos)
 		if (ny >= rows)
 			break;
 
-		if (type == blocks[ny][x]->GetBlockType())
+		if (blocks[ny][x] && type == blocks[ny][x]->GetBlockType())
 		{
 			tempPos.push_back(sf::Vector2i(x, ny));
 			matchCountV++;
@@ -586,12 +603,16 @@ bool Board::CheckMatchAtPossible(sf::Vector2i pos)
 	int x = pos.x;
 	int matchCountH = 1;
 	int matchCountV = 1;
+
+	if (!blocks[y][x])
+		return false;
+
 	BlockTypes type = blocks[y][x]->GetBlockType();
 
-	if (type == BlockTypes::None)
+	if (type == BlockTypes::None || type == BlockTypes::Wall)
 		return false;
-	if (type == BlockTypes::Wall)
-		return false;
+	if (type == BlockTypes::Diamond || type == BlockTypes::Emerald)
+		return true;
 
 	// 가로 검사
 	int nx = x;
@@ -601,7 +622,7 @@ bool Board::CheckMatchAtPossible(sf::Vector2i pos)
 		if (nx < 0)
 			break;
 
-		if (type == blocks[y][nx]->GetBlockType())
+		if (blocks[y][nx] && type == blocks[y][nx]->GetBlockType())
 		{
 			matchCountH++;
 		}
@@ -617,7 +638,7 @@ bool Board::CheckMatchAtPossible(sf::Vector2i pos)
 		if (nx >= cols)
 			break;
 
-		if (type == blocks[y][nx]->GetBlockType())
+		if (blocks[y][nx] && type == blocks[y][nx]->GetBlockType())
 		{
 			matchCountH++;
 		}
@@ -640,7 +661,7 @@ bool Board::CheckMatchAtPossible(sf::Vector2i pos)
 		if (ny < 0)
 			break;
 
-		if (type == blocks[ny][x]->GetBlockType())
+		if (blocks[ny][x] && type == blocks[ny][x]->GetBlockType())
 		{
 			matchCountV++;
 		}
@@ -656,7 +677,7 @@ bool Board::CheckMatchAtPossible(sf::Vector2i pos)
 		if (ny >= rows)
 			break;
 
-		if (type == blocks[ny][x]->GetBlockType())
+		if (blocks[ny][x] && type == blocks[ny][x]->GetBlockType())
 		{
 			matchCountV++;
 		}
@@ -826,8 +847,11 @@ void Board::Reset()
 		}
 	}
 
+	paintedCount = 0;
+	maxPaintableCount = 0;
+
 	SetBoardBlock(initialBlockState);
-	SetBoardTile(initialTileState, initialPaintedCount, initialMaxPaintableCount);
+	SetBoardTile(initialTileState);
 }
 
 void Board::Update(float dt)
@@ -914,5 +938,33 @@ void Board::RemoveBlocksUpdate()
 
 void Board::RelocateBoard()
 {
+	scene->isRelocate = true;
 
+	BlockTypes blockType;
+	BlockTypes temp;
+
+	for (int y = 0; y < rows; y++)
+	{
+		for (int x = 0; x < cols; x++)
+		{
+			blockType = blocks[y][x]->GetBlockType();
+
+			if (blockType == BlockTypes::None || blockType == BlockTypes::Wall)
+				continue;
+
+			do
+			{
+				blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2, 6));
+				temp = blocks[y][x]->GetBlockType();
+			} while (
+				(x >= 2 && blocks[y][x - 2]->GetBlockType() == temp && blocks[y][x - 1]->GetBlockType() == temp) ||
+				(y >= 2 && blocks[y - 2][x]->GetBlockType() == temp && blocks[y - 1][x]->GetBlockType() == temp)
+				);
+		}
+	}
+
+	if (!CheckMatchPossible())
+	{
+		RelocateBoard();
+	}
 }
