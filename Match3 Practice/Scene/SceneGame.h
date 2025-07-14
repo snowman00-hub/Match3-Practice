@@ -1,5 +1,9 @@
 #pragma once
 #include "Scene.h"
+#include "StageUI.h"
+#include "Board.h"
+#include "Tile.h"
+#include "Block.h"
 
 class Board;
 class StageUI;
@@ -16,21 +20,26 @@ protected:
 	sf::Sprite wall;
 
 	int stageLevel = 1;
+	int initialSwapCount;
 
 	sf::Text relocateMessage;
 	float relocateTimer = 0.f;
 	const float relocateTime = 3.0f;
+
+	bool targetIsTile = false;
+	bool targetIsWall = false;
 
 public:
 	bool isClear = false;
 	bool isDefeat = false;
 	bool isRelocate = false;
 
-	int swapCount = 20;
+	int swapCount;
 	int remainTileCount = 0;
 	int remainWallCount = 0;
 
 	SceneGame();
+	SceneGame(SceneIds id);
 	~SceneGame() override = default;
 
 	void Init() override;

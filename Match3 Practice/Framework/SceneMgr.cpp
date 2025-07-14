@@ -3,9 +3,19 @@
 #include "SceneDev1.h"
 #include "SceneDev2.h"
 #include "SceneGame.h"
+#include "SceneStart.h"
+#include "SceneLobby.h"
+#include "SceneStage1.h"
+#include "SceneStage2.h"
+#include "SceneStage3.h"
 
 void SceneMgr::Init()
 {
+	scenes[SceneIds::Start] = new SceneStart();
+	scenes[SceneIds::Lobby] = new SceneLobby();
+	scenes[SceneIds::Stage1] = new SceneStage1();
+	scenes[SceneIds::Stage2] = new SceneStage2();
+	scenes[SceneIds::Stage3] = new SceneStage3();
 	scenes[SceneIds::Game] = new SceneGame();
 	scenes[SceneIds::Dev1] = new SceneDev1();
 	scenes[SceneIds::Dev2] = new SceneDev2();

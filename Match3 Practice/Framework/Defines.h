@@ -18,6 +18,11 @@ enum class Origins
 enum class SceneIds
 {
 	None = -1,
+	Start,
+	Lobby,
+	Stage1,
+	Stage2,
+	Stage3,
 	Game,
 	Dev1,
 	Dev2,

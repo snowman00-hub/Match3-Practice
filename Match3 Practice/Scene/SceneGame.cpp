@@ -1,18 +1,22 @@
 #include "stdafx.h"
 #include "SceneGame.h"
 #include "Animator.h"
-#include "Board.h"
-#include "StageUI.h"
-#include "Tile.h"
-#include "Block.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
 {
 }
 
+SceneGame::SceneGame(SceneIds id)
+	: Scene(id)
+{
+}
+
 void SceneGame::Init()
 {
+	initialSwapCount = 20;
+	swapCount = initialSwapCount;
+
 	background.setTexture(TEXTURE_MGR.Get("graphics/bg_sky.png"));
 
 	ui = (StageUI*)AddGameObject(new StageUI("UI"));
@@ -84,6 +88,8 @@ void SceneGame::Enter()
 
 	Scene::Enter();
 
+	swapCount = initialSwapCount;
+	ui->UpdateSwapCount();
 	ui->UpdateTarget();
 
 	cursor.setTexture(TEXTURE_MGR.Get("graphics/cursor.png"));
@@ -93,6 +99,7 @@ void SceneGame::Enter()
 void SceneGame::Exit()
 {
 	FRAMEWORK.GetWindow().setMouseCursorVisible(true);
+	remainWallCount = 0;
 
 	Scene::Exit();
 }

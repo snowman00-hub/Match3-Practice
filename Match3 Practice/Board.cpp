@@ -16,11 +16,17 @@ void Board::SetBoardBlock(int* arr)
 		{
 			blockType = (BlockTypes)arr[9 * y + x];
 			maxPaintableCount++;
-			
+
+			if (!blocks[y][x])
+			{
+				blocks[y][x] = new Block();
+				blocks[y][x]->Init();
+			}
+
 			if (blockType == BlockTypes::Jem)
 			{
 				do
-				{
+				{			
 					blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2,6));
 					temp = blocks[y][x]->GetBlockType();
 				} while (
@@ -79,6 +85,9 @@ void Board::SetBoardTile(int* arr)
 		}
 	}
 
+	if (paintedCount == 0)
+		maxPaintableCount = 0;
+
 	scene->remainTileCount = maxPaintableCount - paintedCount;
 }
 
@@ -110,11 +119,11 @@ void Board::Idle()
 			int x = (mousePos.x - boardLeft) / Block::SIZE;
 			int y = (mousePos.y - boardTop) / Block::SIZE;
 
-			if (!selectedBlock && blocks[y][x]->GetCanMove())
+			if (blocks[y][x] && !selectedBlock && blocks[y][x]->GetCanMove())
 			{
 				selectedBlock = blocks[y][x];
 			}
-			else if (selectedBlock != blocks[y][x] && blocks[y][x]->GetCanMove())
+			else if (blocks[y][x] && selectedBlock != blocks[y][x] && blocks[y][x]->GetCanMove())
 			{
 				targetBlock = blocks[y][x];
 			}
@@ -559,8 +568,11 @@ bool Board::CheckMatchPossible()
 		{
 			if (x != 0)
 			{
+				if (!blocks[y][x] || !blocks[y][x - 1])
+					continue;
+
 				BlockTypes temp1 = blocks[y][x]->GetBlockType();
-				BlockTypes temp2 = blocks[y][x-1]->GetBlockType();
+				BlockTypes temp2 = blocks[y][x - 1]->GetBlockType();
 				blocks[y][x]->SetBlockType(temp2);
 				blocks[y][x - 1]->SetBlockType(temp1);
 				if(CheckMatchAtPossible(blocks[y][x - 1]->GetBoardPos()) ||
@@ -577,6 +589,9 @@ bool Board::CheckMatchPossible()
 
 			if (y != 0)
 			{
+				if (!blocks[y][x] || !blocks[y - 1][x])
+					continue;
+
 				BlockTypes temp1 = blocks[y][x]->GetBlockType();
 				BlockTypes temp2 = blocks[y - 1][x]->GetBlockType();
 				blocks[y][x]->SetBlockType(temp2);
@@ -737,38 +752,35 @@ void Board::DropBlocks()
 		{
 			if (!blocks[y][x])
 			{
-				if (blocks[y - 1][x])
+				if (blocks[y - 1][x] && blocks[y - 1][x]->GetCanMove())
 				{
-					if (blocks[y - 1][x]->GetCanMove())
-					{
-						blocks[y][x] = blocks[y - 1][x];
-						blocks[y - 1][x] = nullptr;
-						blocks[y][x]->SetMoveDir({ 0.f,1.f });
-						blocks[y][x]->SetBoardPos({ x,y });
-						blocks[y][x]->SetIsDropping(true);
-						dropBlocks.push_back(blocks[y][x]);
-						isDropCheck = true;
-					}
-					else if (x != cols - 1 && blocks[y - 1][x + 1] && blocks[y - 1][x + 1]->GetCanMove())
-					{
-						blocks[y][x] = blocks[y - 1][x + 1];
-						blocks[y - 1][x + 1] = nullptr;
-						blocks[y][x]->SetMoveDir({ -1.f,1.f });
-						blocks[y][x]->SetBoardPos({ x,y });
-						blocks[y][x]->SetIsDropping(true);
-						dropBlocks.push_back(blocks[y][x]);
-						isDropCheck = true;
-					}
-					else if (x != 0 && blocks[y - 1][x - 1] && blocks[y - 1][x - 1]->GetCanMove())
-					{
-						blocks[y][x] = blocks[y - 1][x - 1];
-						blocks[y - 1][x - 1] = nullptr;
-						blocks[y][x]->SetMoveDir({ 1.f,1.f });
-						blocks[y][x]->SetBoardPos({ x,y });
-						blocks[y][x]->SetIsDropping(true);
-						dropBlocks.push_back(blocks[y][x]);
-						isDropCheck = true;
-					}
+					blocks[y][x] = blocks[y - 1][x];
+					blocks[y - 1][x] = nullptr;
+					blocks[y][x]->SetMoveDir({ 0.f,1.f });
+					blocks[y][x]->SetBoardPos({ x,y });
+					blocks[y][x]->SetIsDropping(true);
+					dropBlocks.push_back(blocks[y][x]);
+					isDropCheck = true;
+				}
+				else if (x != cols - 1 && blocks[y - 1][x + 1] && blocks[y - 1][x + 1]->GetCanMove())
+				{
+					blocks[y][x] = blocks[y - 1][x + 1];
+					blocks[y - 1][x + 1] = nullptr;
+					blocks[y][x]->SetMoveDir({ -1.f,1.f });
+					blocks[y][x]->SetBoardPos({ x,y });
+					blocks[y][x]->SetIsDropping(true);
+					dropBlocks.push_back(blocks[y][x]);
+					isDropCheck = true;
+				}
+				else if (x != 0 && blocks[y - 1][x - 1] && blocks[y - 1][x - 1]->GetCanMove())
+				{
+					blocks[y][x] = blocks[y - 1][x - 1];
+					blocks[y - 1][x - 1] = nullptr;
+					blocks[y][x]->SetMoveDir({ 1.f,1.f });
+					blocks[y][x]->SetBoardPos({ x,y });
+					blocks[y][x]->SetIsDropping(true);
+					dropBlocks.push_back(blocks[y][x]);
+					isDropCheck = true;
 				}
 			}
 		}
@@ -842,7 +854,9 @@ void Board::Reset()
 	{
 		for (int x = 0; x < cols; x++)
 		{
-			blocks[y][x]->Reset();
+			if(blocks[y][x])
+				blocks[y][x]->Reset();
+
 			tiles[y][x]->Reset();
 		}
 	}
