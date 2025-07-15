@@ -17,12 +17,6 @@ void Board::SetBoardBlock(int* arr)
 			blockType = (BlockTypes)arr[9 * y + x];
 			maxPaintableCount++;
 
-			if (!blocks[y][x])
-			{
-				blocks[y][x] = new Block();
-				blocks[y][x]->Init();
-			}
-
 			if (blockType == BlockTypes::Jem)
 			{
 				do
@@ -795,7 +789,6 @@ void Board::DropBlocks()
 			blocks[y][x] = blockPool.back();
 			blockPool.pop_back();
 			blocks[y][x]->Reset();
-			blocks[y][x]->SetCanMove(true);
 			blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2, 6));
 			blocks[y][x]->SetBoardPos({ x,y });
 			blocks[y][x]->SetPosition({ boardLeft + (float)Block::SIZE * x, boardTop - (float)Block::SIZE });
@@ -854,13 +847,20 @@ void Board::Reset()
 	{
 		for (int x = 0; x < cols; x++)
 		{
-			if(blocks[y][x])
+			if (!blocks[y][x])
+			{
+				blocks[y][x] = blockPool.back();
 				blocks[y][x]->Reset();
+				blockPool.pop_back();
+			}
+			else
+			{
+				blocks[y][x]->Reset();
+			}
 
 			tiles[y][x]->Reset();
 		}
 	}
-
 	paintedCount = 0;
 	maxPaintableCount = 0;
 

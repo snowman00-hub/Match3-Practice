@@ -6,7 +6,12 @@ protected:
 	sf::Sprite background;
 	sf::Sprite cursor;
 
+	sf::Sprite nextStageButton;
+	sf::Text ButtonMessage;
+
 public:
+	static int nextStageLevel;
+
 	SceneLobby();
 	~SceneLobby() = default;
 

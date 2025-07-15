@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneGame.h"
 #include "Animator.h"
+#include "SceneLobby.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -110,6 +111,7 @@ void SceneGame::Update(float dt)
 
 	if (isClear)
 	{
+		SceneLobby::nextStageLevel++;
 		std::cout << "Clear" << std::endl;
 	}
 	else if (isDefeat)

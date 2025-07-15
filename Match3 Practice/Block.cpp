@@ -48,6 +48,7 @@ void Block::Reset()
 {
 	block.setTexture(TEXTURE_MGR.Get(blockTexId));
 	active = true;
+	canMove = true;
 }
 
 void Block::Update(float dt)
