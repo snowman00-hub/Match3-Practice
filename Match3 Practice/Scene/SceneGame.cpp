@@ -36,6 +36,20 @@ void SceneGame::Init()
 	Utils::SetOrigin(relocateMessage, Origins::MC);
 	relocateMessage.setPosition({ 600.f,150.f });
 
+	clearMessage.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
+	clearMessage.setCharacterSize(80);
+	clearMessage.setFillColor(sf::Color::Yellow);
+	clearMessage.setString("Clear!");
+	Utils::SetOrigin(clearMessage, Origins::MC);
+	clearMessage.setPosition({ 360.f,380.f });
+
+	defeatMessage.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
+	defeatMessage.setCharacterSize(80);
+	defeatMessage.setFillColor(sf::Color::Blue);
+	defeatMessage.setString("Defeat");
+	Utils::SetOrigin(defeatMessage, Origins::MC);
+	defeatMessage.setPosition({ 360.f,380.f });
+
 	board = (Board*)AddGameObject(new Board());
 	// -1 ºó °ø°£
 	//  0 º¸¼®
@@ -89,6 +103,10 @@ void SceneGame::Enter()
 
 	Scene::Enter();
 
+	isClear = false;
+	isDefeat = false;
+	gameEndTimer = 0.f;
+
 	swapCount = initialSwapCount;
 	ui->UpdateSwapCount();
 	ui->UpdateTarget();
@@ -111,12 +129,22 @@ void SceneGame::Update(float dt)
 
 	if (isClear)
 	{
-		SceneLobby::nextStageLevel++;
-		std::cout << "Clear" << std::endl;
+		gameEndTimer += dt;
+		if (gameEndTimer > 3.0f)
+		{
+			gameEndTimer = 0.f;
+			SceneLobby::nextStageLevel++;
+			SCENE_MGR.ChangeScene(SceneIds::Lobby);
+		}
 	}
 	else if (isDefeat)
 	{
-		std::cout << "Defeat" << std::endl;
+		gameEndTimer += dt;
+		if (gameEndTimer > 3.0f)
+		{
+			gameEndTimer = 0.f;
+			SCENE_MGR.ChangeScene(SceneIds::Lobby);
+		}
 	}
 
 	if (isRelocate)
@@ -128,7 +156,9 @@ void SceneGame::Update(float dt)
 			relocateTimer = 0.f;
 		}
 	}
-	Scene::Update(dt);
+
+	if(!isDefeat && !isClear)
+		Scene::Update(dt);
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
@@ -136,7 +166,11 @@ void SceneGame::Draw(sf::RenderWindow& window)
 	window.draw(background);
 	Scene::Draw(window);
 	window.setView(uiView);
-	window.draw(cursor);
 	if (isRelocate)
 		window.draw(relocateMessage);
+	if (isClear)
+		window.draw(clearMessage);
+	if (isDefeat)
+		window.draw(defeatMessage);
+	window.draw(cursor);
 }

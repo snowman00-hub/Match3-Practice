@@ -66,6 +66,20 @@ void SceneStage2::Init()
 	Utils::SetOrigin(relocateMessage, Origins::MC);
 	relocateMessage.setPosition({ 600.f,150.f });
 
+	clearMessage.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
+	clearMessage.setCharacterSize(80);
+	clearMessage.setFillColor(sf::Color::Yellow);
+	clearMessage.setString("Clear!");
+	Utils::SetOrigin(clearMessage, Origins::MC);
+	clearMessage.setPosition({ 360.f,380.f });
+
+	defeatMessage.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
+	defeatMessage.setCharacterSize(80);
+	defeatMessage.setFillColor(sf::Color::Blue);
+	defeatMessage.setString("Defeat");
+	Utils::SetOrigin(defeatMessage, Origins::MC);
+	defeatMessage.setPosition({ 360.f,380.f });
+
 	board = (Board*)AddGameObject(new Board());
 	board->SetInitialBlockState(initialBlockState);
 	board->SetInitialTileState(initialTileState);

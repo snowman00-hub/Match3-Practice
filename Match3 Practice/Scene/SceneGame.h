@@ -23,7 +23,10 @@ protected:
 	int initialSwapCount;
 
 	sf::Text relocateMessage;
+	sf::Text clearMessage;
+	sf::Text defeatMessage;
 	float relocateTimer = 0.f;
+	float gameEndTimer = 0.f;
 	const float relocateTime = 3.0f;
 
 	bool targetIsTile = false;
