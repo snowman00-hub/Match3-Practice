@@ -9,7 +9,7 @@ SceneStage2::SceneStage2()
 void SceneStage2::Init()
 {
 	stageLevel = 2;
-	initialSwapCount = 13;
+	initialSwapCount = 9;
 	swapCount = initialSwapCount;
 	targetIsTile = false;
 	targetIsWall = true;
@@ -19,7 +19,7 @@ void SceneStage2::Init()
 	//  1 Àå¾Ö¹°
 	static int initialBlockState[81] =
 	{
-		1,1,1,1,0,1,1,1,1,
+		0,0,0,0,0,0,0,0,0,
 		1,1,0,0,0,0,0,1,1,
 		1,0,1,0,0,0,1,0,1,
 		1,0,0,1,0,1,0,0,1,

@@ -52,6 +52,7 @@ void SceneLobby::Update(float dt)
 	{
 		if (nextStageButton.getGlobalBounds().contains(cursor.getPosition()))
 		{
+			SOUND_MGR.PlaySfx("sound/click.mp3");
 			SCENE_MGR.ChangeScene((SceneIds)(nextStageLevel + 1));
 		}
 	}

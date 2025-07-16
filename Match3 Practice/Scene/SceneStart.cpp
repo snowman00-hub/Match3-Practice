@@ -33,6 +33,9 @@ void SceneStart::Enter()
 
 	cursor.setTexture(TEXTURE_MGR.Get("graphics/cursor.png"));
 	Utils::SetOrigin(cursor, Origins::TL);
+
+	SOUND_MGR.PlayBgm("sound/backgroundBgm.mp3");
+	SOUND_MGR.SetBgmVolume(50.f);
 }
 
 void SceneStart::Update(float dt)
@@ -41,6 +44,7 @@ void SceneStart::Update(float dt)
 
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 	{
+		SOUND_MGR.PlaySfx("sound/click.mp3");
 		SCENE_MGR.ChangeScene(SceneIds::Lobby);
 	}
 

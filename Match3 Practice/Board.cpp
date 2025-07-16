@@ -90,11 +90,13 @@ void Board::Idle()
 	if (scene->remainTileCount == 0 && scene->remainWallCount == 0)
 	{
 		scene->isClear = true;
+		SOUND_MGR.PlaySfx("sound/clear.mp3");
 		return;
 	}
 	else if (scene->swapCount == 0)
 	{
 		scene->isDefeat = true;
+		SOUND_MGR.PlaySfx("sound/defeat.mp3");
 		return;
 	}
 
@@ -158,6 +160,7 @@ void Board::Idle()
 		nextState = GameState::Swap;
 		scene->swapCount--;
 		((StageUI*)scene->FindGameObject("UI"))->UpdateSwapCount();
+		SOUND_MGR.PlaySfx("sound/swapSound.mp3");
 	}
 
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
@@ -727,6 +730,7 @@ void Board::RemoveBlocks()
 	isRemoving = true;
 
 	currentState = GameState::Animation;
+	SOUND_MGR.PlaySfx("sound/pop.mp3");
 	if (!nextRemoveBlocks.empty())
 	{
 		nextState = GameState::Remove;
@@ -744,9 +748,9 @@ void Board::DropBlocks()
 	{
 		for (int x = cols - 1; x >= 0; --x)
 		{
-			if (!blocks[y][x])
+			if (!blocks[y][x] && blocks[y -1][x])
 			{
-				if (blocks[y - 1][x] && blocks[y - 1][x]->GetCanMove())
+				if (blocks[y - 1][x]->GetCanMove())
 				{
 					blocks[y][x] = blocks[y - 1][x];
 					blocks[y - 1][x] = nullptr;
@@ -925,6 +929,7 @@ void Board::StageTargetUIUpdate()
 	for (auto wall : destroyedWalls)
 	{
 		scene->remainWallCount--;
+		wall->SetBlockType(BlockTypes::None);
 	}
 	destroyedWalls.clear();
 
