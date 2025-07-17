@@ -19,6 +19,7 @@ void Framework::Init(int w, int h, const std::string& t)
     texIds.push_back("graphics/button.png");
 
     fontIds.push_back("fonts/Maplestory Light.ttf");
+
     soundIds.push_back("sound/backgroundBgm.mp3");
     soundIds.push_back("sound/click.mp3");
     soundIds.push_back("sound/swapSound.mp3");

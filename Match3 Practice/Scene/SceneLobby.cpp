@@ -52,8 +52,15 @@ void SceneLobby::Update(float dt)
 	{
 		if (nextStageButton.getGlobalBounds().contains(cursor.getPosition()))
 		{
-			SOUND_MGR.PlaySfx("sound/click.mp3");
-			SCENE_MGR.ChangeScene((SceneIds)(nextStageLevel + 1));
+			if (nextStageLevel < 3)
+			{
+				SOUND_MGR.PlaySfx("sound/click.mp3");
+				SCENE_MGR.ChangeScene((SceneIds)(nextStageLevel + 1));
+			}
+			else
+			{
+				ButtonMessage.setString("Game End!");
+			}
 		}
 	}
 
