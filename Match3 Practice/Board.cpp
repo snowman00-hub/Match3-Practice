@@ -119,9 +119,12 @@ void Board::Idle()
 			{
 				selectedBlock = blocks[y][x];
 			}
-			else if (blocks[y][x] && selectedBlock != blocks[y][x] && blocks[y][x]->GetCanMove())
+			else if (blocks[y][x] && selectedBlock != blocks[y][x])
 			{
-				targetBlock = blocks[y][x];
+				if (blocks[y][x]->GetCanMove())
+					targetBlock = blocks[y][x];
+				else
+					selectedBlock = nullptr;
 			}
 		}
 	}

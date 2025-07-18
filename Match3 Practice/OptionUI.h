@@ -6,6 +6,8 @@ struct Option
 	sf::Sprite optionPanel;
 	Button bgmButton;
 	Button sfxButton;
+	Button restartButton;
+	Button exitButton;
 };
 
 class OptionUI : public GameObject

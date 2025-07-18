@@ -62,8 +62,21 @@ void OptionUI::Init()
 	UI.sfxButton.buttonOffTexId = "graphics/sfxOff.png";
 	UI.sfxButton.sprite.setTexture(TEXTURE_MGR.Get(UI.sfxButton.buttonOnTexId));
 
-	UI.bgmButton.sprite.setPosition(UI.optionPanel.getPosition() + sf::Vector2f(30.f, 30.f));
-	UI.sfxButton.sprite.setPosition(UI.optionPanel.getPosition() + sf::Vector2f(130.f, 30.f));
+	UI.restartButton.sprite.setTexture(TEXTURE_MGR.Get("graphics/textButton.png"));
+	UI.restartButton.text.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
+	UI.restartButton.text.setString(L"다시하기");
+	UI.restartButton.Init();
+	UI.restartButton.text.setFillColor(sf::Color::Black);
+	UI.exitButton.sprite.setTexture(TEXTURE_MGR.Get("graphics/textButton.png"));
+	UI.exitButton.text.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
+	UI.exitButton.text.setString(L"나가기");
+	UI.exitButton.Init();
+	UI.exitButton.text.setFillColor(sf::Color::Black);
+
+	UI.bgmButton.SetPosition(UI.optionPanel.getPosition() + sf::Vector2f(30.f, 30.f));
+	UI.sfxButton.SetPosition(UI.optionPanel.getPosition() + sf::Vector2f(130.f, 30.f));
+	UI.restartButton.SetPosition(UI.optionPanel.getPosition() + sf::Vector2f(115.f, 170.f));
+	UI.exitButton.SetPosition(UI.optionPanel.getPosition() + sf::Vector2f(115.f, 270.f));
 
 	UI.bgmButton.SetCallBack([&]()
 		{
@@ -96,6 +109,20 @@ void OptionUI::Init()
 				UI.sfxButton.sprite.setTexture(TEXTURE_MGR.Get(UI.sfxButton.buttonOnTexId));
 				SOUND_MGR.SetSfxVolume(SOUND_MGR.DEFAULT_SFX_VOLUME);
 			}
+		}
+	);
+
+	UI.restartButton.SetCallBack([this]()
+		{
+			SCENE_MGR.ChangeScene(SCENE_MGR.GetCurrentSceneId());
+			active = false;
+		}
+	);
+
+	UI.exitButton.SetCallBack([this]()
+		{
+			SCENE_MGR.ChangeScene(SceneIds::Lobby);
+			active = false;
 		}
 	);
 }
@@ -133,6 +160,8 @@ void OptionUI::Update(float dt)
 {
 	UI.bgmButton.Update(dt);
 	UI.sfxButton.Update(dt);
+	UI.restartButton.Update(dt);
+	UI.exitButton.Update(dt);
 }
 
 void OptionUI::Draw(sf::RenderWindow& window)
@@ -140,4 +169,6 @@ void OptionUI::Draw(sf::RenderWindow& window)
 	window.draw(UI.optionPanel);
 	UI.bgmButton.Draw(window);
 	UI.sfxButton.Draw(window);
+	UI.restartButton.Draw(window);
+	UI.exitButton.Draw(window);
 }

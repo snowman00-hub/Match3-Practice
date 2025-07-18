@@ -51,7 +51,7 @@ void SceneGame::Init()
 
 	//
 	optionButton = (Button*)AddGameObject(new Button());
-	optionButton->SetPosition({ 600.f,100.f });
+	optionButton->SetPosition({ 580.f,90.f });
 	optionButton->sprite.setTexture(TEXTURE_MGR.Get("graphics/option.png"));
 	optionButton->SetCallBack([this]()
 		{
@@ -64,7 +64,7 @@ void SceneGame::Init()
 
 	optionUI = (OptionUI*)AddGameObject(new OptionUI());
 	optionUI->SetActive(false);
-	optionUI->SetPosition({ 360.f,480.f });
+	optionUI->SetPosition({ 245.f,280.f });
 	//
 
 	Scene::Init();

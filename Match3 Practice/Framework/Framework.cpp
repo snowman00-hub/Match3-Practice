@@ -17,6 +17,7 @@ void Framework::Init(int w, int h, const std::string& t)
     texIds.push_back("graphics/targetCountPanel.png");
     texIds.push_back("graphics/stageLevelPanel.png");
     texIds.push_back("graphics/button.png");
+    texIds.push_back("graphics/textButton.png");
     texIds.push_back("graphics/optionPanel.png");
     texIds.push_back("graphics/option.png");
     texIds.push_back("graphics/bgmOn.png");

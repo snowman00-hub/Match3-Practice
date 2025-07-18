@@ -8,9 +8,6 @@ protected:
 	sf::Sprite cursor;
 	sf::Text startMessage;
 
-	Button* button;
-	OptionUI* ui;
-
 public:
 	SceneStart();
 	~SceneStart() = default;

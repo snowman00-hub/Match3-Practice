@@ -17,23 +17,6 @@ void SceneStart::Init()
 	Utils::SetOrigin(startMessage, Origins::MC);
 	startMessage.setPosition({ 360.f, 400.f });
 
-	//
-	button = (Button*)AddGameObject(new Button());
-	button->SetPosition({ 600.f,100.f });
-	button->sprite.setTexture(TEXTURE_MGR.Get("graphics/option.png"));
-	button->SetCallBack([this]()
-		{
-			if(ui->GetActive())
-				ui->SetActive(false);
-			else
-				ui->SetActive(true);
-		}
-	);
-
-	ui = (OptionUI*)AddGameObject(new OptionUI());
-	ui->SetActive(false);
-	ui->SetPosition({ 360.f,480.f });
-	//
 	Scene::Init();
 }
 
