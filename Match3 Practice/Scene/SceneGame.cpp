@@ -55,15 +55,20 @@ void SceneGame::Init()
 	optionButton->sprite.setTexture(TEXTURE_MGR.Get("graphics/option.png"));
 	optionButton->SetCallBack([this]()
 		{
-			if (optionUI->GetActive())
+			if (board->GetCurrentState() == GameState::Idle)
 			{
-				optionUI->SetActive(false);
-				SOUND_MGR.PlaySfx("sound/click.mp3");
-			}
-			else
-			{
-				optionUI->SetActive(true);
-				SOUND_MGR.PlaySfx("sound/click.mp3");
+				if (optionUI->GetActive())
+				{
+					isPlaying = true;
+					optionUI->SetActive(false);
+					SOUND_MGR.PlaySfx("sound/click.mp3");
+				}
+				else
+				{
+					isPlaying = false;
+					optionUI->SetActive(true);
+					SOUND_MGR.PlaySfx("sound/click.mp3");
+				}
 			}
 		}
 	);
@@ -101,6 +106,7 @@ void SceneGame::Enter()
 
 	Scene::Enter();
 
+	isPlaying = true;
 	isClear = false;
 	isDefeat = false;
 	gameEndTimer = 0.f;

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "OptionUI.h"
+#include <SceneGame.h>
 
 OptionUI::OptionUI(const std::string& name)
 	: GameObject(name)
@@ -118,6 +119,7 @@ void OptionUI::Init()
 
 	UI.restartButton.SetCallBack([this]()
 		{
+			((SceneGame*)SCENE_MGR.GetCurrentScene())->isPlaying = true;
 			SCENE_MGR.ChangeScene(SCENE_MGR.GetCurrentSceneId());
 			SOUND_MGR.PlaySfx("sound/click.mp3");
 			active = false;

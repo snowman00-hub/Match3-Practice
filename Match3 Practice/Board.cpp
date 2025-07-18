@@ -915,36 +915,39 @@ void Board::Reset()
 
 void Board::Update(float dt)
 {
-	switch (currentState)
+	if (scene->isPlaying)
 	{
-		case GameState::Idle:
-			Idle();
-			break;
-		case GameState::Swap:
-			SwapBlock();
-			break;
-		case GameState::Animation:
-			Animation(dt);
-			break;
-		case GameState::MatchCheck:
-			CheckMatchAll();
-			break;
-		case GameState::Remove:
-			RemoveBlocks();
-			break;
-		case GameState::Drop:
-			DropBlocks();
-			break;
-	}	
-
-	for (int y = 0; y < rows; y++)
-	{
-		for (int x = 0; x < cols; x++)
+		switch (currentState)
 		{
-			if (!blocks[y][x])
-				continue;
+			case GameState::Idle:
+				Idle();
+				break;
+			case GameState::Swap:
+				SwapBlock();
+				break;
+			case GameState::Animation:
+				Animation(dt);
+				break;
+			case GameState::MatchCheck:
+				CheckMatchAll();
+				break;
+			case GameState::Remove:
+				RemoveBlocks();
+				break;
+			case GameState::Drop:
+				DropBlocks();
+				break;
+		}
 
-			blocks[y][x]->Update(dt);
+		for (int y = 0; y < rows; y++)
+		{
+			for (int x = 0; x < cols; x++)
+			{
+				if (!blocks[y][x])
+					continue;
+
+				blocks[y][x]->Update(dt);
+			}
 		}
 	}
 }

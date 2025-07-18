@@ -60,6 +60,7 @@ public:
 	void SetBoardTile(int* arr);
 
 	int GetRemainPaintableCount() { return maxPaintableCount - paintedCount; }
+	GameState GetCurrentState() const { return currentState; }
 
 	void Idle();
 	void SwapBlock();

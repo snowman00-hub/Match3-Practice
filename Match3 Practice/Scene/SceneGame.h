@@ -15,6 +15,7 @@ protected:
 	StageUI* ui;
 
 	Button* optionButton;
+	Button* skillButton;
 	OptionUI* optionUI;
 
 	sf::Sprite background;
@@ -36,6 +37,7 @@ protected:
 	bool targetIsWall = false;
 
 public:
+	bool isPlaying = true;
 	bool isClear = false;
 	bool isDefeat = false;
 	bool isRelocate = false;
