@@ -76,6 +76,9 @@ void SceneGame::Init()
 	optionUI = (OptionUI*)AddGameObject(new OptionUI());
 	optionUI->SetActive(false);
 	optionUI->SetPosition({ 245.f,280.f });
+
+	skillButton = (Button*)AddGameObject(new Button());
+	skillButton->SetPosition({ 580.f,860.f });
 	//
 
 	Scene::Init();
