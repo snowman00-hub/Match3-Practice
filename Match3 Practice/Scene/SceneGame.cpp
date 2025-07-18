@@ -15,9 +15,6 @@ SceneGame::SceneGame(SceneIds id)
 
 void SceneGame::Init()
 {
-	initialSwapCount = 20;
-	swapCount = initialSwapCount;
-
 	background.setTexture(TEXTURE_MGR.Get("graphics/bg_sky.png"));
 
 	ui = (StageUI*)AddGameObject(new StageUI("UI"));
@@ -51,45 +48,40 @@ void SceneGame::Init()
 	defeatMessage.setPosition({ 360.f,380.f });
 
 	board = (Board*)AddGameObject(new Board());
-	// -1 빈 공간
-	//  0 보석
-	//  1 장애물
-	static int initialBlockState[81] = 
-	{
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,1,0,0,0,0,0,
-		0,0,1,0,1,0,0,0,0,
-		0,0,0,1,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0
-	};
-	
-	// -1 빈 공간
-	//  0 디폴트
-	//  1 페인트된
-	static int initialTileState[81] =
-	{
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,1,0,0,0,0,0,0,0,
-		0,1,0,0,0,0,0,0,0,
-		0,1,0,0,0,0,0,0,0,
-		0,1,0,0,0,0,0,0,0,
-		0,1,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0
-	};
 
-	board->SetInitialBlockState(initialBlockState);
-	board->SetInitialTileState(initialTileState);
+	//
+	optionButton = (Button*)AddGameObject(new Button());
+	optionButton->SetPosition({ 600.f,100.f });
+	optionButton->sprite.setTexture(TEXTURE_MGR.Get("graphics/option.png"));
+	optionButton->SetCallBack([this]()
+		{
+			if (optionUI->GetActive())
+				optionUI->SetActive(false);
+			else
+				optionUI->SetActive(true);
+		}
+	);
+
+	optionUI = (OptionUI*)AddGameObject(new OptionUI());
+	optionUI->SetActive(false);
+	optionUI->SetPosition({ 360.f,480.f });
+	//
 
 	Scene::Init();
 
-	ui->SetTarget(&redTile, &remainTileCount);
-	ui->SetTarget(&wall, &remainWallCount);
+	if (targetIsTile)
+	{
+		remainTileCount++;
+		ui->SetTarget(&redTile, &remainTileCount);
+		remainTileCount--;
+	}
+
+	if (targetIsWall)
+	{
+		remainWallCount++;
+		ui->SetTarget(&wall, &remainWallCount);
+		remainWallCount--;
+	}
 }
 
 void SceneGame::Enter()

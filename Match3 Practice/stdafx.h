@@ -25,6 +25,7 @@
 #include "GameObject.h"
 #include "SpriteGo.h"
 #include "TextGo.h"
+#include "Button.h"
 #include "Scene.h"
 #include "SceneMgr.h"
 #include "Framework.h"

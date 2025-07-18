@@ -14,6 +14,9 @@ protected:
 	Board* board;
 	StageUI* ui;
 
+	Button* optionButton;
+	OptionUI* optionUI;
+
 	sf::Sprite background;
 	sf::Sprite cursor;
 	sf::Sprite redTile;

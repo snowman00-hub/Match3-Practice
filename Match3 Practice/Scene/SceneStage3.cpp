@@ -48,41 +48,8 @@ void SceneStage3::Init()
 
 	//
 
-	background.setTexture(TEXTURE_MGR.Get("graphics/bg_sky.png"));
+	SceneGame::Init();
 
-	ui = (StageUI*)AddGameObject(new StageUI("UI"));
-	ui->SetStageLevel(stageLevel);
-	ui->SetSwapCount(&swapCount);
-	ui->UpdateSwapCount();
-	redTile.setTexture(TEXTURE_MGR.Get("graphics/tiles.png"));
-	redTile.setTextureRect(sf::IntRect(Tile::SIZE, 0, Tile::SIZE, Tile::SIZE));
-	wall.setTexture(TEXTURE_MGR.Get("graphics/blocks.png"));
-	wall.setTextureRect(sf::IntRect(0, 0, Block::SIZE, Block::SIZE));
-
-	relocateMessage.setFont(FONT_MGR.Get("fonts/Maplestory Light.ttf"));
-	relocateMessage.setCharacterSize(80);
-	relocateMessage.setFillColor(sf::Color::Yellow);
-	relocateMessage.setString(L"Àç¹èÄ¡!");
-	Utils::SetOrigin(relocateMessage, Origins::MC);
-	relocateMessage.setPosition({ 600.f,150.f });
-
-	board = (Board*)AddGameObject(new Board());
 	board->SetInitialBlockState(initialBlockState);
 	board->SetInitialTileState(initialTileState);
-
-	Scene::Init();
-
-	if (targetIsTile)
-	{
-		remainTileCount++;
-		ui->SetTarget(&redTile, &remainTileCount);
-		remainTileCount--;
-	}
-
-	if (targetIsWall)
-	{
-		remainWallCount++;
-		ui->SetTarget(&wall, &remainWallCount);
-		remainWallCount--;
-	}
 }

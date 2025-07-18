@@ -16,10 +16,14 @@ protected:
 	std::list<sf::Sound*> playing;
 	std::list<sf::Sound*> waiting;
 
-	float sfxVolume = 100.f;
-	float bgmVolume = 100.f;
+	float sfxVolume = 30.f;
+	float bgmVolume = 30.f;
 
 public:
+	const float DEFAULT_BGM_VOLUME = 30.f;
+	const float DEFAULT_SFX_VOLUME = 30.f;
+	bool GetIsBgmOn() { return bgmVolume != 0.f; }
+	bool GetIsSfxOn() { return sfxVolume != 0.f; }
 
 	void SetBgmVolume(float v)
 	{
