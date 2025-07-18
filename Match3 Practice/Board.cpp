@@ -100,11 +100,6 @@ void Board::Idle()
 		return;
 	}
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
-	{
-		SCENE_MGR.ChangeScene(scene->Id);
-	}
-
 	mousePos = InputMgr::GetMousePosition();
 
 	if (mousePos.x >= boardLeft && mousePos.x < boardLeft + Block::SIZE * cols

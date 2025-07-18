@@ -64,6 +64,21 @@ void SceneLobby::Update(float dt)
 		}
 	}
 
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	{
+		SCENE_MGR.ChangeScene(SceneIds::Stage1);
+	}
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	{
+		SCENE_MGR.ChangeScene(SceneIds::Stage2);
+	}
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num3))
+	{
+		SCENE_MGR.ChangeScene(SceneIds::Stage3);
+	}
+
 	Scene::Update(dt);
 }
 
