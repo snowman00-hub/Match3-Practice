@@ -1,41 +1,53 @@
 #include "stdafx.h"
 #include "SceneDev1.h"
-#include "TextGo.h"
-#include "StageUI.h"
-#include "Tile.h"
-#include "Block.h"
 
 SceneDev1::SceneDev1()
-	: Scene(SceneIds::Dev1)
+	: SceneGame(SceneIds::Dev1)
 {
 }
 
 void SceneDev1::Init()
 {
-	ui = (StageUI*)AddGameObject(new StageUI("UI"));
-	ui->SetStageLevel(1);
+	stageLevel = 999;
+	initialSwapCount = 99;
+	swapCount = initialSwapCount;
+	targetIsTile = true;
+	targetIsWall = true;
 
-	redTile.setTexture(TEXTURE_MGR.Get("graphics/tiles.png"));
-	redTile.setTextureRect(sf::IntRect(Tile::SIZE, 0, Tile::SIZE, Tile::SIZE));
-	wall.setTexture(TEXTURE_MGR.Get("graphics/blocks.png"));
-	wall.setTextureRect(sf::IntRect(0, 0, Block::SIZE, Block::SIZE));
+	// -1 빈 공간
+	//  0 보석
+	//  1 장애물
+	static int initialBlockState[81] =
+	{
+		-1,-1,-1,0,0,0,-1,-1,-1,
+		-1,-1,-1,0,0,0,-1,-1,-1,
+		-1,-1,-1,0,0,0,-1,-1,-1,
+		1,-1,-1,-1,-1,-1,-1,-1,1,
+		0,-1,-1,-1,-1,-1,-1,-1,0,
+		0,-1,-1,-1,-1,-1,-1,-1,0,
+		0,-1,-1,-1,-1,-1,-1,-1,0,
+		1,-1,-1,-1,-1,-1,-1,-1,1,
+		1,1,1,0,0,0,1,1,1,
+	};
 
-	Scene::Init();
+	// -1 빈 공간
+	//  0 디폴트
+	//  1 페인트된
+	static int initialTileState[81] =
+	{
+		0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,
+		1,1,1,1,1,1,1,1,1
+	};
 
-	redTileCount = 20;
-	wallCount = 10;
+	SceneGame::Init();
 
-	ui->SetTarget(&redTile, &redTileCount);
-	ui->SetTarget(&wall, &wallCount);
-}
-
-void SceneDev1::Enter()
-{
-	sf::Vector2f windowSize = FRAMEWORK.GetWindowSizeF();
-	worldView.setSize(windowSize);
-	worldView.setCenter(windowSize * 0.5f);
-	uiView.setSize(windowSize);
-	uiView.setCenter(windowSize * 0.5f);
-
-	Scene::Enter();
+	board->SetInitialBlockState(initialBlockState);
+	board->SetInitialTileState(initialTileState);
 }

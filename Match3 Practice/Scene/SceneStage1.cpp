@@ -9,7 +9,7 @@ SceneStage1::SceneStage1()
 void SceneStage1::Init()
 {
 	stageLevel = 1;
-	initialSwapCount = 16;
+	initialSwapCount = 18;
 	swapCount = initialSwapCount;
 	targetIsTile = true;
 	targetIsWall = true;

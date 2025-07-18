@@ -79,6 +79,11 @@ void SceneLobby::Update(float dt)
 		SCENE_MGR.ChangeScene(SceneIds::Stage3);
 	}
 
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num0))
+	{
+		SCENE_MGR.ChangeScene(SceneIds::Dev1);
+	}
+
 	Scene::Update(dt);
 }
 

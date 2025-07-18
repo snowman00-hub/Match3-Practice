@@ -746,7 +746,7 @@ void Board::DropBlocks()
 	{
 		for (int x = cols - 1; x >= 0; --x)
 		{
-			if (!blocks[y][x] && blocks[y -1][x])
+			if (!blocks[y][x] && blocks[y - 1][x])
 			{
 				if (blocks[y - 1][x]->GetCanMove())
 				{
@@ -776,6 +776,49 @@ void Board::DropBlocks()
 					blocks[y][x]->SetBoardPos({ x,y });
 					blocks[y][x]->SetIsDropping(true);
 					dropBlocks.push_back(blocks[y][x]);
+					isDropCheck = true;
+				}
+				else if (y != rows - 1 && !blocks[y + 1][x] && x != cols - 1 && blocks[y][x + 1] && blocks[y][x + 1]->GetCanMove())
+				{
+					blocks[y + 1][x] = blocks[y][x + 1];
+					blocks[y][x + 1] = nullptr;
+					blocks[y + 1][x]->SetMoveDir({ -1.f, 1.f });
+					blocks[y + 1][x]->SetBoardPos({ x,y + 1 });
+					blocks[y + 1][x]->SetIsDropping(true);
+					dropBlocks.push_back(blocks[y + 1][x]);
+					isDropCheck = true;
+				}
+				else if (y != rows - 1 && !blocks[y + 1][x] && x != 0 && blocks[y][x - 1] && blocks[y][x - 1]->GetCanMove())
+				{
+					blocks[y + 1][x] = blocks[y][x - 1];
+					blocks[y][x - 1] = nullptr;
+					blocks[y + 1][x]->SetMoveDir({ 1.f, 1.f });
+					blocks[y + 1][x]->SetBoardPos({ x,y + 1 });
+					blocks[y + 1][x]->SetIsDropping(true);
+					dropBlocks.push_back(blocks[y + 1][x]);
+					isDropCheck = true;
+				}
+			}
+			else if (!blocks[y][x] && !blocks[y - 1][x])
+			{
+				if (y != rows - 1 && !blocks[y + 1][x] && x != cols - 1 && blocks[y][x + 1] && blocks[y][x + 1]->GetCanMove())
+				{
+					blocks[y + 1][x] = blocks[y][x + 1];
+					blocks[y][x + 1] = nullptr;
+					blocks[y + 1][x]->SetMoveDir({ -1.f, 1.f });
+					blocks[y + 1][x]->SetBoardPos({ x,y + 1 });
+					blocks[y + 1][x]->SetIsDropping(true);
+					dropBlocks.push_back(blocks[y + 1][x]);
+					isDropCheck = true;
+				}
+				else if (y != rows - 1 && !blocks[y + 1][x] && x != 0 && blocks[y][x - 1] && blocks[y][x - 1]->GetCanMove())
+				{
+					blocks[y + 1][x] = blocks[y][x - 1];
+					blocks[y][x - 1] = nullptr;
+					blocks[y + 1][x]->SetMoveDir({ 1.f, 1.f });
+					blocks[y + 1][x]->SetBoardPos({ x,y + 1 });
+					blocks[y + 1][x]->SetIsDropping(true);
+					dropBlocks.push_back(blocks[y + 1][x]);
 					isDropCheck = true;
 				}
 			}

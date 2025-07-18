@@ -84,12 +84,14 @@ void OptionUI::Init()
 			{
 				UI.bgmButton.isOn = false;
 				UI.bgmButton.sprite.setTexture(TEXTURE_MGR.Get(UI.bgmButton.buttonOffTexId));
+				SOUND_MGR.PlaySfx("sound/click.mp3");
 				SOUND_MGR.SetBgmVolume(0.f);
 			}
 			else
 			{
 				UI.bgmButton.isOn = true;
 				UI.bgmButton.sprite.setTexture(TEXTURE_MGR.Get(UI.bgmButton.buttonOnTexId));
+				SOUND_MGR.PlaySfx("sound/click.mp3");
 				SOUND_MGR.SetBgmVolume(SOUND_MGR.DEFAULT_BGM_VOLUME);
 			}
 		}
@@ -101,6 +103,7 @@ void OptionUI::Init()
 			{
 				UI.sfxButton.isOn = false;
 				UI.sfxButton.sprite.setTexture(TEXTURE_MGR.Get(UI.sfxButton.buttonOffTexId));
+				SOUND_MGR.PlaySfx("sound/click.mp3");
 				SOUND_MGR.SetSfxVolume(0.f);
 			}
 			else
@@ -108,6 +111,7 @@ void OptionUI::Init()
 				UI.sfxButton.isOn = true;
 				UI.sfxButton.sprite.setTexture(TEXTURE_MGR.Get(UI.sfxButton.buttonOnTexId));
 				SOUND_MGR.SetSfxVolume(SOUND_MGR.DEFAULT_SFX_VOLUME);
+				SOUND_MGR.PlaySfx("sound/click.mp3");
 			}
 		}
 	);
@@ -115,6 +119,7 @@ void OptionUI::Init()
 	UI.restartButton.SetCallBack([this]()
 		{
 			SCENE_MGR.ChangeScene(SCENE_MGR.GetCurrentSceneId());
+			SOUND_MGR.PlaySfx("sound/click.mp3");
 			active = false;
 		}
 	);
@@ -122,6 +127,7 @@ void OptionUI::Init()
 	UI.exitButton.SetCallBack([this]()
 		{
 			SCENE_MGR.ChangeScene(SceneIds::Lobby);
+			SOUND_MGR.PlaySfx("sound/click.mp3");
 			active = false;
 		}
 	);

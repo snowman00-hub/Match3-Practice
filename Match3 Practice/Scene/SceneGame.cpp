@@ -56,9 +56,15 @@ void SceneGame::Init()
 	optionButton->SetCallBack([this]()
 		{
 			if (optionUI->GetActive())
+			{
 				optionUI->SetActive(false);
+				SOUND_MGR.PlaySfx("sound/click.mp3");
+			}
 			else
+			{
 				optionUI->SetActive(true);
+				SOUND_MGR.PlaySfx("sound/click.mp3");
+			}
 		}
 	);
 
