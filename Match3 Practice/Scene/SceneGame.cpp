@@ -79,6 +79,16 @@ void SceneGame::Init()
 
 	skillButton = (Button*)AddGameObject(new Button());
 	skillButton->SetPosition({ 580.f,860.f });
+	skillButton->sprite.setTexture(TEXTURE_MGR.Get("graphics/star.png"));
+	skillButton->SetCallBack([this]()
+		{
+			if (board->GetCurrentState() == GameState::Idle)
+			{
+				board->RelocateBoard();
+				skillButton->SetActive(false);
+			}
+		}
+	);
 	//
 
 	Scene::Init();
@@ -120,6 +130,8 @@ void SceneGame::Enter()
 
 	cursor.setTexture(TEXTURE_MGR.Get("graphics/cursor.png"));
 	Utils::SetOrigin(cursor, Origins::TL);
+
+	skillButton->SetActive(true);
 }
 
 void SceneGame::Exit()

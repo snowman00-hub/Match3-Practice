@@ -24,6 +24,7 @@ void Framework::Init(int w, int h, const std::string& t)
     texIds.push_back("graphics/bgmOff.png");
     texIds.push_back("graphics/sfxOn.png");
     texIds.push_back("graphics/sfxOff.png");
+    texIds.push_back("graphics/star.png");
 
     fontIds.push_back("fonts/Maplestory Light.ttf");
 
