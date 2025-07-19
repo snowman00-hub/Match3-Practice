@@ -86,6 +86,7 @@ void SceneGame::Init()
 			{
 				board->RelocateBoard();
 				skillButton->SetActive(false);
+				SOUND_MGR.PlaySfx("sound/click.mp3");
 			}
 		}
 	);

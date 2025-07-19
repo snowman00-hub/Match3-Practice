@@ -1010,6 +1010,9 @@ void Board::RelocateBoard()
 	{
 		for (int x = 0; x < cols; x++)
 		{
+			if (!blocks[y][x])
+				continue;
+
 			blockType = blocks[y][x]->GetBlockType();
 
 			if (blockType == BlockTypes::None || blockType == BlockTypes::Wall)
@@ -1020,8 +1023,8 @@ void Board::RelocateBoard()
 				blocks[y][x]->SetBlockType((BlockTypes)Utils::RandomRange(2, 6));
 				temp = blocks[y][x]->GetBlockType();
 			} while (
-				(x >= 2 && blocks[y][x - 2]->GetBlockType() == temp && blocks[y][x - 1]->GetBlockType() == temp) ||
-				(y >= 2 && blocks[y - 2][x]->GetBlockType() == temp && blocks[y - 1][x]->GetBlockType() == temp)
+				(x >= 2 && blocks[y][x-2] && blocks[y][x - 2]->GetBlockType() == temp && blocks[y][x - 1] && blocks[y][x - 1]->GetBlockType() == temp) ||
+				(y >= 2 && blocks[y-2][x] && blocks[y - 2][x]->GetBlockType() == temp && blocks[y-1][x] && blocks[y - 1][x]->GetBlockType() == temp)
 				);
 		}
 	}
