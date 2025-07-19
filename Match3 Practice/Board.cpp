@@ -778,7 +778,7 @@ void Board::DropBlocks()
 					dropBlocks.push_back(blocks[y][x]);
 					isDropCheck = true;
 				}
-				else if (y != rows - 1 && !blocks[y + 1][x] && x != cols - 1 && blocks[y][x + 1] && blocks[y][x + 1]->GetCanMove())
+				else if (y != rows - 1 && x != cols - 1 && !blocks[y + 1][x]  && blocks[y][x + 1] && blocks[y][x + 1]->GetCanMove() && !(blocks[y][x+1]->GetIsDropping()))
 				{
 					blocks[y + 1][x] = blocks[y][x + 1];
 					blocks[y][x + 1] = nullptr;
@@ -788,7 +788,7 @@ void Board::DropBlocks()
 					dropBlocks.push_back(blocks[y + 1][x]);
 					isDropCheck = true;
 				}
-				else if (y != rows - 1 && !blocks[y + 1][x] && x != 0 && blocks[y][x - 1] && blocks[y][x - 1]->GetCanMove())
+				else if (y != rows - 1 && x != 0 && !blocks[y + 1][x] && blocks[y][x - 1] && blocks[y][x - 1]->GetCanMove() && !(blocks[y][x - 1]->GetIsDropping()))
 				{
 					blocks[y + 1][x] = blocks[y][x - 1];
 					blocks[y][x - 1] = nullptr;
@@ -801,7 +801,7 @@ void Board::DropBlocks()
 			}
 			else if (!blocks[y][x] && !blocks[y - 1][x])
 			{
-				if (y != rows - 1 && !blocks[y + 1][x] && x != cols - 1 && blocks[y][x + 1] && blocks[y][x + 1]->GetCanMove())
+				if (y != rows - 1 && x != cols - 1 && !blocks[y + 1][x] && blocks[y][x + 1] && blocks[y][x + 1]->GetCanMove() && !(blocks[y][x + 1]->GetIsDropping()))
 				{
 					blocks[y + 1][x] = blocks[y][x + 1];
 					blocks[y][x + 1] = nullptr;
@@ -811,7 +811,7 @@ void Board::DropBlocks()
 					dropBlocks.push_back(blocks[y + 1][x]);
 					isDropCheck = true;
 				}
-				else if (y != rows - 1 && !blocks[y + 1][x] && x != 0 && blocks[y][x - 1] && blocks[y][x - 1]->GetCanMove())
+				else if (y != rows - 1 && x != 0 && !blocks[y + 1][x]  && blocks[y][x - 1] && blocks[y][x - 1]->GetCanMove() && !(blocks[y][x - 1]->GetIsDropping()))
 				{
 					blocks[y + 1][x] = blocks[y][x - 1];
 					blocks[y][x - 1] = nullptr;

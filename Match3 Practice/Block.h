@@ -40,7 +40,8 @@ public:
 	void SetIsSwapping(bool b) { isSwapping = b; }
 	void SetIsRemoving(bool b) { isRemoving = b; }
 
-	bool GetCanMove() { return canMove; }
+	bool GetCanMove() const { return canMove; }
+	bool GetIsDropping() const { return isDropping; }
 	BlockTypes GetBlockType() const { return type; }
 	sf::Vector2i GetBoardPos() const { return boardPos; }
 
